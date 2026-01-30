@@ -25,26 +25,31 @@ const GUEST_PASSWORD_HASH = import.meta.env.VITE_GUEST_PASSWORD_HASH;
 const PUBLIC_PASSWORD_HASH = import.meta.env.VITE_PUBLIC_PASSWORD_HASH;
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-    const [accessLevel, setAccessLevel] = useState<AccessLevel>('none');
-
-    // Check for existing session on mount
-    useEffect(() => {
-        const storedLevel = sessionStorage.getItem('accessLevel') as AccessLevel;
-        if (storedLevel === 'guest' || storedLevel === 'public') {
-            setAccessLevel(storedLevel);
+    const [accessLevel, setAccessLevel] = useState<AccessLevel>(() => {
+        if (typeof window !== 'undefined') {
+            const stored = sessionStorage.getItem('accessLevel') as AccessLevel;
+            return (stored === 'guest' || stored === 'public') ? stored : 'none';
         }
-    }, []);
+        return 'none';
+    });
+
+    // Sync state changes to storage (though login/logout helpers do this, it keeps it safe)
+    useEffect(() => {
+        if (accessLevel === 'none') {
+            sessionStorage.removeItem('accessLevel');
+        } else {
+            sessionStorage.setItem('accessLevel', accessLevel);
+        }
+    }, [accessLevel]);
 
     const login = async (password: string): Promise<boolean> => {
         const inputHash = await sha256(password);
 
         if (inputHash === GUEST_PASSWORD_HASH) {
             setAccessLevel('guest');
-            sessionStorage.setItem('accessLevel', 'guest');
             return true;
         } else if (inputHash === PUBLIC_PASSWORD_HASH) {
             setAccessLevel('public');
-            sessionStorage.setItem('accessLevel', 'public');
             return true;
         }
 
@@ -53,7 +58,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const logout = () => {
         setAccessLevel('none');
-        sessionStorage.removeItem('accessLevel');
     };
 
     return (

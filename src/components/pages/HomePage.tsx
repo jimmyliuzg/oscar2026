@@ -1,8 +1,7 @@
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import InviteDetails from '../components/party/InviteDetails';
-import RSVPForm from '../components/party/RSVPForm';
+import { useAuth } from '../../context/AuthContext';
+import InviteDetails from '../party/InviteDetails';
+import RSVPForm from '../party/RSVPForm';
 
 export default function HomePage() {
     const { accessLevel } = useAuth();
@@ -49,12 +48,12 @@ export default function HomePage() {
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <Link to="/vote" className="btn-primary">
+                            <a href="/vote" className="btn-primary">
                                 Make Your Predictions 🏆
-                            </Link>
-                            <Link to="/nominations" className="btn-outline">
+                            </a>
+                            <a href="/nominations" className="btn-outline">
                                 View Nominations
-                            </Link>
+                            </a>
                         </div>
                     </motion.div>
 
@@ -120,12 +119,12 @@ export default function HomePage() {
                             Browse all 24 categories and submit your predictions before Oscar night!
                         </p>
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <Link to="/nominations" className="btn-secondary">
+                            <a href="/nominations" className="btn-secondary">
                                 Browse Nominations
-                            </Link>
-                            <Link to="/vote" className="btn-primary">
+                            </a>
+                            <a href="/vote" className="btn-primary">
                                 Submit Predictions
-                            </Link>
+                            </a>
                         </div>
                     </motion.div>
                 </section>

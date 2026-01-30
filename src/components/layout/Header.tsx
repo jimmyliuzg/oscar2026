@@ -1,10 +1,14 @@
-import { Link, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 
 export default function Header() {
     const { accessLevel, logout } = useAuth();
-    const location = useLocation();
+    const [currentPath, setCurrentPath] = useState('');
+
+    useEffect(() => {
+        setCurrentPath(window.location.pathname);
+    }, []);
 
     const navItems = [
         { path: '/', label: 'Home', guestOnly: false },
@@ -27,24 +31,25 @@ export default function Header() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
-                    <Link to="/" className="flex items-center gap-2 group">
+                    <a href="/" className="flex items-center gap-2 group">
                         <span className="text-2xl group-hover:animate-bounce">🏆</span>
                         <span className="font-heading text-xl text-text hidden sm:block">
                             Oscars 2026
                         </span>
-                    </Link>
+                    </a>
 
                     {/* Navigation */}
                     <nav className="flex items-center gap-1 sm:gap-2">
                         {filteredNavItems.map((item) => {
-                            const isActive = location.pathname === item.path;
+                            // Simple check for active state
+                            const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path));
                             return (
-                                <Link
+                                <a
                                     key={item.path}
-                                    to={item.path}
+                                    href={item.path}
                                     className={`relative px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive
-                                            ? 'text-primary'
-                                            : 'text-text-light hover:text-text hover:bg-accent-light'
+                                        ? 'text-primary'
+                                        : 'text-text-light hover:text-text hover:bg-accent-light'
                                         }`}
                                 >
                                     {item.label}
@@ -55,7 +60,7 @@ export default function Header() {
                                             transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                                         />
                                     )}
-                                </Link>
+                                </a>
                             );
                         })}
                     </nav>

@@ -1,0 +1,8 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { ConnectedVoting } from "../components/PageWrappers";
+---
+
+<Layout title="Vote | 2026 Oscar Party">
+    <ConnectedVoting client:only="react" />
+</Layout>

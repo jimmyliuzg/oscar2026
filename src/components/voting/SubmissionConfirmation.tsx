@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+
 import { useVoting } from '../../context/VotingContext';
 
 export default function SubmissionConfirmation() {
@@ -69,16 +69,16 @@ export default function SubmissionConfirmation() {
                 transition={{ delay: 0.6 }}
                 className="flex flex-col sm:flex-row gap-4 justify-center"
             >
-                <Link to="/nominations" className="btn-outline">
+                <a href="/nominations" className="btn-outline">
                     View Nominations
-                </Link>
-                <Link
-                    to="/vote"
+                </a>
+                <a
+                    href="/vote"
                     onClick={() => clearVotes()}
                     className="btn-primary"
                 >
                     Vote Again
-                </Link>
+                </a>
             </motion.div>
         </motion.div>
     );

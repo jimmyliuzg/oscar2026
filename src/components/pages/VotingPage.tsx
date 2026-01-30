@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { aboveTheLineCategories } from '../data/nominations';
-import { useVoting } from '../context/VotingContext';
-import VotingSlide from '../components/voting/VotingSlide';
-import BelowTheLineForm from '../components/voting/BelowTheLineForm';
-import SubmissionForm from '../components/voting/SubmissionForm';
-import SubmissionConfirmation from '../components/voting/SubmissionConfirmation';
+import { aboveTheLineCategories } from '../../data/nominations';
+import { useVoting } from '../../context/VotingContext';
+import VotingSlide from '../voting/VotingSlide';
+import BelowTheLineForm from '../voting/BelowTheLineForm';
+import SubmissionForm from '../voting/SubmissionForm';
+import SubmissionConfirmation from '../voting/SubmissionConfirmation';
 
 type VotingPhase = 'intro' | 'aboveTheLine' | 'belowTheLine' | 'submission' | 'confirmation';
 

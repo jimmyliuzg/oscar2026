@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { categories, aboveTheLineCategories, belowTheLineCategories } from '../data/nominations';
-import CategoryList from '../components/nominations/CategoryList';
-import PosterCarousel from '../components/nominations/PosterCarousel';
+import { categories, aboveTheLineCategories, belowTheLineCategories } from '../../data/nominations';
+import CategoryList from '../nominations/CategoryList';
+import PosterCarousel from '../nominations/PosterCarousel';
 
 type FilterType = 'all' | 'aboveTheLine' | 'belowTheLine';
 
@@ -48,8 +48,8 @@ export default function NominationsPage() {
                             key={tab.id}
                             onClick={() => setFilter(tab.id as FilterType)}
                             className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${filter === tab.id
-                                    ? 'bg-primary text-text shadow-golden'
-                                    : 'bg-accent-light text-text-light hover:bg-accent-light/80'
+                                ? 'bg-primary text-text shadow-golden'
+                                : 'bg-accent-light text-text-light hover:bg-accent-light/80'
                                 }`}
                         >
                             {tab.label} ({tab.count})
