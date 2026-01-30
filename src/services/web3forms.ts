@@ -1,5 +1,5 @@
 const WEB3FORMS_ENDPOINT = 'https://api.web3forms.com/submit';
-const ACCESS_KEY = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
+const ACCESS_KEY = import.meta.env.PUBLIC_WEB3FORMS_ACCESS_KEY;
 
 interface RSVPData {
     name: string;

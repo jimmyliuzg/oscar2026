@@ -5,55 +5,63 @@ export type AccessLevel = 'guest' | 'public' | 'none';
 interface AuthContextType {
     accessLevel: AccessLevel;
     isAuthenticated: boolean;
-    login: (password: string) => Promise<boolean>;
+    isLoading: boolean;
+    login: (password: string) => Promise<{ success: boolean; error?: string }>;
     logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// SHA-256 hash function
-async function sha256(message: string): Promise<string> {
-    const msgBuffer = new TextEncoder().encode(message);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    return hashHex;
-}
-
-// Pre-computed hashes for comparison
-const GUEST_PASSWORD_HASH = import.meta.env.VITE_GUEST_PASSWORD_HASH;
-const PUBLIC_PASSWORD_HASH = import.meta.env.VITE_PUBLIC_PASSWORD_HASH;
+const STORAGE_KEY = 'oscar_access_level';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-    const [accessLevel, setAccessLevel] = useState<AccessLevel>(() => {
-        if (typeof window !== 'undefined') {
-            const stored = sessionStorage.getItem('accessLevel') as AccessLevel;
-            return (stored === 'guest' || stored === 'public') ? stored : 'none';
-        }
-        return 'none';
-    });
+    const [accessLevel, setAccessLevel] = useState<AccessLevel>('none');
+    const [isLoading, setIsLoading] = useState(true);
 
-    // Sync state changes to storage (though login/logout helpers do this, it keeps it safe)
+    // Restore session from sessionStorage on mount
     useEffect(() => {
-        if (accessLevel === 'none') {
-            sessionStorage.removeItem('accessLevel');
-        } else {
-            sessionStorage.setItem('accessLevel', accessLevel);
+        if (typeof window !== 'undefined') {
+            const stored = sessionStorage.getItem(STORAGE_KEY) as AccessLevel;
+            if (stored === 'guest' || stored === 'public') {
+                setAccessLevel(stored);
+            }
+            setIsLoading(false);
         }
-    }, [accessLevel]);
+    }, []);
 
-    const login = async (password: string): Promise<boolean> => {
-        const inputHash = await sha256(password);
-
-        if (inputHash === GUEST_PASSWORD_HASH) {
-            setAccessLevel('guest');
-            return true;
-        } else if (inputHash === PUBLIC_PASSWORD_HASH) {
-            setAccessLevel('public');
-            return true;
+    // Sync state changes to storage
+    useEffect(() => {
+        if (typeof window !== 'undefined' && !isLoading) {
+            if (accessLevel === 'none') {
+                sessionStorage.removeItem(STORAGE_KEY);
+            } else {
+                sessionStorage.setItem(STORAGE_KEY, accessLevel);
+            }
         }
+    }, [accessLevel, isLoading]);
 
-        return false;
+    const login = async (password: string): Promise<{ success: boolean; error?: string }> => {
+        try {
+            const response = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ password }),
+            });
+
+            const data = await response.json();
+
+            if (data.success && data.accessLevel) {
+                setAccessLevel(data.accessLevel);
+                return { success: true };
+            }
+
+            return { success: false, error: data.error || 'Invalid password' };
+        } catch (error) {
+            console.error('Login error:', error);
+            return { success: false, error: 'An error occurred. Please try again.' };
+        }
     };
 
     const logout = () => {
@@ -65,6 +73,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             value={{
                 accessLevel,
                 isAuthenticated: accessLevel !== 'none',
+                isLoading,
                 login,
                 logout,
             }}

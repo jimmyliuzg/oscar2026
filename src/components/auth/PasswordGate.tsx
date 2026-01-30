@@ -5,23 +5,34 @@ import { useAuth } from '../../context/AuthContext';
 export default function PasswordGate() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const { login } = useAuth();
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const { login, isLoading } = useAuth();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
-        setIsLoading(true);
+        setIsSubmitting(true);
 
-        const success = await login(password);
+        const result = await login(password);
 
-        if (!success) {
-            setError('Invalid password. Please try again.');
+        if (!result.success) {
+            setError(result.error || 'Invalid password. Please try again.');
             setPassword('');
         }
 
-        setIsLoading(false);
+        setIsSubmitting(false);
     };
+
+    // Show loading state while checking for existing session
+    if (isLoading) {
+        return (
+            <div className="min-h-screen bg-background flex items-center justify-center">
+                <div className="animate-pulse">
+                    <span className="text-4xl">🏆</span>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
@@ -65,7 +76,7 @@ export default function PasswordGate() {
                                 placeholder="Enter password"
                                 className="input text-center"
                                 autoFocus
-                                disabled={isLoading}
+                                disabled={isSubmitting}
                             />
                         </div>
 
@@ -81,10 +92,10 @@ export default function PasswordGate() {
 
                         <button
                             type="submit"
-                            disabled={isLoading || !password}
+                            disabled={isSubmitting || !password}
                             className="btn-primary w-full flex items-center justify-center gap-2"
                         >
-                            {isLoading ? (
+                            {isSubmitting ? (
                                 <>
                                     <span className="animate-spin">⌛</span>
                                     Verifying...
