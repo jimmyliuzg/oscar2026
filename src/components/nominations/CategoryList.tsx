@@ -28,21 +28,16 @@ export default function CategoryList({ categories, onNomineeHover }: CategoryLis
                             onClick={() => setExpandedCategory(isExpanded ? null : category.id)}
                             className="w-full px-6 py-4 flex items-center justify-between hover:bg-accent-light/50 transition-colors"
                         >
-                            <div className="flex items-center gap-3">
-                                <span className="text-2xl">
-                                    {category.isAboveTheLine ? '⭐' : '🎬'}
-                                </span>
-                                <div className="text-left">
-                                    <h3 className="font-heading text-lg text-text">{category.name}</h3>
-                                    <p className="text-sm text-text-muted">
-                                        {category.nominees.length} nominees
-                                    </p>
-                                </div>
+                            <div className="text-left">
+                                <h3 className="font-heading text-xl sm:text-2xl text-text mb-1">{category.name}</h3>
+                                <p className="text-sm text-text-muted">
+                                    {category.nominees.length} nominees
+                                </p>
                             </div>
                             <motion.span
                                 animate={{ rotate: isExpanded ? 180 : 0 }}
                                 transition={{ duration: 0.2 }}
-                                className="text-text-light"
+                                className="text-text-light text-xl"
                             >
                                 ▼
                             </motion.span>
@@ -69,29 +64,6 @@ export default function CategoryList({ categories, onNomineeHover }: CategoryLis
                                                 />
                                             ))}
                                         </div>
-
-                                        {/* Trailer links */}
-                                        {category.isAboveTheLine && (
-                                            <div className="mt-6 pt-4 border-t border-accent-light">
-                                                <p className="text-sm text-text-muted mb-3">Watch trailers:</p>
-                                                <div className="flex flex-wrap gap-2">
-                                                    {category.nominees
-                                                        .filter((n) => n.trailerUrl)
-                                                        .map((nominee) => (
-                                                            <a
-                                                                key={nominee.id}
-                                                                href={nominee.trailerUrl}
-                                                                target="_blank"
-                                                                rel="noopener noreferrer"
-                                                                className="inline-flex items-center gap-1 text-sm text-primary hover:text-primary-dark transition-colors"
-                                                            >
-                                                                <span>▶</span>
-                                                                {nominee.film}
-                                                            </a>
-                                                        ))}
-                                                </div>
-                                            </div>
-                                        )}
                                     </div>
                                 </motion.div>
                             )}

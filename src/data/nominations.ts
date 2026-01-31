@@ -6,6 +6,8 @@ export interface Nominee {
     posterUrl?: string;
     trailerUrl?: string;
     description?: string;
+    producers?: string; // For Best Picture nominees
+    director?: string; // Film director
 }
 
 export interface Category {
@@ -24,21 +26,21 @@ export const categories: Category[] = [
         shortName: 'Picture',
         isAboveTheLine: true,
         nominees: [
-            { id: 'bp-1', name: 'Bugonia', film: 'Bugonia', year: 2025, trailerUrl: 'https://www.youtube.com/watch?v=bd_5HcTujfc' },
-            { id: 'bp-2', name: 'F1', film: 'F1', year: 2025, trailerUrl: 'https://www.youtube.com/watch?v=8yh9BPUBbbQ' },
-            { id: 'bp-3', name: 'Frankenstein', film: 'Frankenstein', year: 2025, trailerUrl: 'https://www.youtube.com/watch?v=8aulMPhE12g' },
-            { id: 'bp-4', name: 'Hamnet', film: 'Hamnet', year: 2025, trailerUrl: 'https://www.youtube.com/watch?v=xYcgQMxQwmk' },
-            { id: 'bp-5', name: 'Marty Supreme', film: 'Marty Supreme', year: 2025, trailerUrl: 'https://www.youtube.com/watch?v=s9gSuKaKcqM' },
-            { id: 'bp-6', name: 'One Battle after Another', film: 'One Battle after Another', year: 2025, trailerUrl: 'https://www.youtube.com/watch?v=feOQFKv2Lw4' },
-            { id: 'bp-7', name: 'The Secret Agent', film: 'The Secret Agent', year: 2025, trailerUrl: 'https://www.youtube.com/watch?v=9UfrzDKrhEc' },
-            { id: 'bp-8', name: 'Sentimental Value', film: 'Sentimental Value', year: 2025, trailerUrl: 'https://www.youtube.com/watch?v=lKbcKQN5Yrw' },
-            { id: 'bp-9', name: 'Sinners', film: 'Sinners', year: 2025, trailerUrl: 'https://www.youtube.com/watch?v=bKGxHflevuk' },
-            { id: 'bp-10', name: 'Train Dreams', film: 'Train Dreams', year: 2025, trailerUrl: 'https://www.youtube.com/watch?v=_Nk8TrBHOrA' },
+            { id: 'bp-1', name: 'Bugonia', film: 'Bugonia', year: 2025, trailerUrl: 'https://www.youtube.com/watch?v=bd_5HcTujfc', director: 'Yorgos Lanthimos' },
+            { id: 'bp-2', name: 'F1', film: 'F1', year: 2025, trailerUrl: 'https://www.youtube.com/watch?v=8yh9BPUBbbQ', director: 'Joseph Kosinski' },
+            { id: 'bp-3', name: 'Frankenstein', film: 'Frankenstein', year: 2025, trailerUrl: 'https://www.youtube.com/watch?v=8aulMPhE12g', director: 'Guillermo del Toro' },
+            { id: 'bp-4', name: 'Hamnet', film: 'Hamnet', year: 2025, trailerUrl: 'https://www.youtube.com/watch?v=xYcgQMxQwmk', director: 'Chloé Zhao' },
+            { id: 'bp-5', name: 'Marty Supreme', film: 'Marty Supreme', year: 2025, trailerUrl: 'https://www.youtube.com/watch?v=s9gSuKaKcqM', director: 'Josh Safdie' },
+            { id: 'bp-6', name: 'One Battle after Another', film: 'One Battle after Another', year: 2025, trailerUrl: 'https://www.youtube.com/watch?v=feOQFKv2Lw4', director: 'Paul Thomas Anderson' },
+            { id: 'bp-7', name: 'The Secret Agent', film: 'The Secret Agent', year: 2025, trailerUrl: 'https://www.youtube.com/watch?v=9UfrzDKrhEc', director: 'Christopher Nolan' },
+            { id: 'bp-8', name: 'Sentimental Value', film: 'Sentimental Value', year: 2025, trailerUrl: 'https://www.youtube.com/watch?v=lKbcKQN5Yrw', director: 'Joachim Trier' },
+            { id: 'bp-9', name: 'Sinners', film: 'Sinners', year: 2025, trailerUrl: 'https://www.youtube.com/watch?v=bKGxHflevuk', director: 'Ryan Coogler' },
+            { id: 'bp-10', name: 'Train Dreams', film: 'Train Dreams', year: 2025, trailerUrl: 'https://www.youtube.com/watch?v=_Nk8TrBHOrA', director: 'Clint Bentley' },
         ],
     },
     {
         id: 'directing',
-        name: 'Directing',
+        name: 'Best Director',
         shortName: 'Director',
         isAboveTheLine: true,
         nominees: [
@@ -51,7 +53,7 @@ export const categories: Category[] = [
     },
     {
         id: 'actorLeading',
-        name: 'Actor in a Leading Role',
+        name: 'Best Actor in a Leading Role',
         shortName: 'Lead Actor',
         isAboveTheLine: true,
         nominees: [
@@ -64,7 +66,7 @@ export const categories: Category[] = [
     },
     {
         id: 'actressLeading',
-        name: 'Actress in a Leading Role',
+        name: 'Best Actress in a Leading Role',
         shortName: 'Lead Actress',
         isAboveTheLine: true,
         nominees: [
@@ -77,7 +79,7 @@ export const categories: Category[] = [
     },
     {
         id: 'actorSupporting',
-        name: 'Actor in a Supporting Role',
+        name: 'Best Actor in a Supporting Role',
         shortName: 'Supporting Actor',
         isAboveTheLine: true,
         nominees: [
@@ -90,7 +92,7 @@ export const categories: Category[] = [
     },
     {
         id: 'actressSupporting',
-        name: 'Actress in a Supporting Role',
+        name: 'Best Actress in a Supporting Role',
         shortName: 'Supporting Actress',
         isAboveTheLine: true,
         nominees: [
@@ -103,7 +105,7 @@ export const categories: Category[] = [
     },
     {
         id: 'originalScreenplay',
-        name: 'Writing (Original Screenplay)',
+        name: 'Best Original Screenplay',
         shortName: 'Original Screenplay',
         isAboveTheLine: true,
         nominees: [
@@ -116,7 +118,7 @@ export const categories: Category[] = [
     },
     {
         id: 'adaptedScreenplay',
-        name: 'Writing (Adapted Screenplay)',
+        name: 'Best Adapted Screenplay',
         shortName: 'Adapted Screenplay',
         isAboveTheLine: true,
         nominees: [
@@ -131,7 +133,7 @@ export const categories: Category[] = [
     // BELOW THE LINE CATEGORIES
     {
         id: 'cinematography',
-        name: 'Cinematography',
+        name: 'Best Cinematography',
         shortName: 'Cinematography',
         isAboveTheLine: false,
         nominees: [
@@ -144,7 +146,7 @@ export const categories: Category[] = [
     },
     {
         id: 'costumeDesign',
-        name: 'Costume Design',
+        name: 'Best Costume Design',
         shortName: 'Costumes',
         isAboveTheLine: false,
         nominees: [
@@ -157,7 +159,7 @@ export const categories: Category[] = [
     },
     {
         id: 'filmEditing',
-        name: 'Film Editing',
+        name: 'Best Film Editing',
         shortName: 'Editing',
         isAboveTheLine: false,
         nominees: [
@@ -170,7 +172,7 @@ export const categories: Category[] = [
     },
     {
         id: 'makeupHairstyling',
-        name: 'Makeup and Hairstyling',
+        name: 'Best Makeup and Hairstyling',
         shortName: 'Makeup',
         isAboveTheLine: false,
         nominees: [
@@ -183,7 +185,7 @@ export const categories: Category[] = [
     },
     {
         id: 'originalScore',
-        name: 'Music (Original Score)',
+        name: 'Best Original Score',
         shortName: 'Score',
         isAboveTheLine: false,
         nominees: [
@@ -196,7 +198,7 @@ export const categories: Category[] = [
     },
     {
         id: 'originalSong',
-        name: 'Music (Original Song)',
+        name: 'Best Original Song',
         shortName: 'Song',
         isAboveTheLine: false,
         nominees: [
@@ -209,7 +211,7 @@ export const categories: Category[] = [
     },
     {
         id: 'productionDesign',
-        name: 'Production Design',
+        name: 'Best Production Design',
         shortName: 'Production Design',
         isAboveTheLine: false,
         nominees: [
@@ -222,7 +224,7 @@ export const categories: Category[] = [
     },
     {
         id: 'sound',
-        name: 'Sound',
+        name: 'Best Sound',
         shortName: 'Sound',
         isAboveTheLine: false,
         nominees: [
@@ -235,7 +237,7 @@ export const categories: Category[] = [
     },
     {
         id: 'visualEffects',
-        name: 'Visual Effects',
+        name: 'Best Visual Effects',
         shortName: 'VFX',
         isAboveTheLine: false,
         nominees: [
@@ -248,7 +250,7 @@ export const categories: Category[] = [
     },
     {
         id: 'animatedFeature',
-        name: 'Animated Feature Film',
+        name: 'Best Animated Feature Film',
         shortName: 'Animated Feature',
         isAboveTheLine: false,
         nominees: [
@@ -261,7 +263,7 @@ export const categories: Category[] = [
     },
     {
         id: 'animatedShort',
-        name: 'Animated Short Film',
+        name: 'Best Animated Short Film',
         shortName: 'Animated Short',
         isAboveTheLine: false,
         nominees: [
@@ -274,7 +276,7 @@ export const categories: Category[] = [
     },
     {
         id: 'casting',
-        name: 'Casting',
+        name: 'Best Casting',
         shortName: 'Casting',
         isAboveTheLine: false,
         nominees: [
@@ -287,7 +289,7 @@ export const categories: Category[] = [
     },
     {
         id: 'documentaryFeature',
-        name: 'Documentary Feature Film',
+        name: 'Best Documentary Feature Film',
         shortName: 'Doc Feature',
         isAboveTheLine: false,
         nominees: [
@@ -300,7 +302,7 @@ export const categories: Category[] = [
     },
     {
         id: 'documentaryShort',
-        name: 'Documentary Short Film',
+        name: 'Best Documentary Short Film',
         shortName: 'Doc Short',
         isAboveTheLine: false,
         nominees: [
@@ -313,7 +315,7 @@ export const categories: Category[] = [
     },
     {
         id: 'internationalFeature',
-        name: 'International Feature Film',
+        name: 'Best International Feature Film',
         shortName: 'International',
         isAboveTheLine: false,
         nominees: [
@@ -326,7 +328,7 @@ export const categories: Category[] = [
     },
     {
         id: 'liveActionShort',
-        name: 'Live Action Short Film',
+        name: 'Best Live Action Short Film',
         shortName: 'Live Action Short',
         isAboveTheLine: false,
         nominees: [

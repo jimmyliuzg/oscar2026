@@ -6,16 +6,16 @@ export default function Footer() {
                     <div className="flex items-center gap-2">
                         <span className="text-xl">🎬</span>
                         <span className="font-accent text-text-light">
-                            Oscar Watch Party 2026
+                            The 98th Academy Awards | 2026
                         </span>
                     </div>
 
                     <p className="text-text-muted text-sm">
-                        Sunday, March 15, 2026 • 6:00 PM
+                        Sunday, March 15, 2026 • 7:00 PM
                     </p>
 
                     <p className="text-text-muted text-xs">
-                        Made with ❤️ for movie lovers
+                        By @jimmyliuzg • Made with ❤️ for movie lovers
                     </p>
                 </div>
             </div>

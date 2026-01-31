@@ -1,4 +1,4 @@
-# 2026 Oscars Watch Party
+# 2026 Oscars Nominations and Predictions
 
 A modern, mobile-first web application for hosting an engaging Oscars party experience. Features password-protected party invitations, complete 2026 Oscar nominations with rich media, and an interactive voting system.
 

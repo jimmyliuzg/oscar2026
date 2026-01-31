@@ -56,9 +56,9 @@ export default function VotingPage() {
                                 Oscar Predictions
                             </h1>
                             <p className="text-text-light mb-8 text-lg">
-                                Make your picks for the 2026 Academy Awards! Start with the 8 major
-                                "above the line" categories, then optionally fill out the remaining 16
-                                technical categories.
+                                Make your picks for the 98th Academy Awards! Start with the 8 major
+                                categories, then optionally fill out the remaining 16
+                                categories.
                             </p>
 
                             <div className="bg-background-elevated rounded-xl p-6 border border-accent-light mb-8">
@@ -70,7 +70,7 @@ export default function VotingPage() {
                                     </div>
                                     <div className="flex items-start gap-3">
                                         <span className="w-8 h-8 bg-primary-light rounded-full flex items-center justify-center flex-shrink-0 text-primary font-bold">2</span>
-                                        <p className="text-sm text-text-light">Optionally fill out 16 technical categories</p>
+                                        <p className="text-sm text-text-light">Optionally fill out 16 additional categories</p>
                                     </div>
                                     <div className="flex items-start gap-3">
                                         <span className="w-8 h-8 bg-primary-light rounded-full flex items-center justify-center flex-shrink-0 text-primary font-bold">3</span>

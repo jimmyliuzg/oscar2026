@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import InviteDetails from '../party/InviteDetails';
 import RSVPForm from '../party/RSVPForm';
+import FeaturedCarousel from '../FeaturedCarousel';
 
 export default function HomePage() {
     const { accessLevel } = useAuth();
@@ -16,7 +17,7 @@ export default function HomePage() {
     return (
         <div className="page-transition">
             {/* Hero Section */}
-            <section className="relative overflow-hidden py-16 sm:py-24">
+            <section className="relative overflow-hidden py-12 sm:py-16">
                 {/* Background decoration */}
                 <div className="absolute inset-0 overflow-hidden">
                     <div className="absolute top-0 left-1/4 w-72 h-72 bg-primary/10 rounded-full blur-3xl" />
@@ -28,7 +29,7 @@ export default function HomePage() {
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6 }}
-                        className="text-center max-w-3xl mx-auto mb-12"
+                        className="text-center max-w-3xl mx-auto mb-8"
                     >
                         <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6">
                             <span className="text-lg">🎬</span>
@@ -131,7 +132,7 @@ export default function HomePage() {
             )}
 
             {/* Featured Films Section */}
-            <section className="section">
+            <section className="section pt-0">
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -141,28 +142,15 @@ export default function HomePage() {
                         Featured Nominees
                     </h2>
 
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
-                        {[
-                            { title: 'Sinners', nominations: 16 },
-                            { title: 'One Battle after Another', nominations: 12 },
-                            { title: 'Hamnet', nominations: 10 },
-                            { title: 'Marty Supreme', nominations: 9 },
-                            { title: 'Frankenstein', nominations: 8 },
-                        ].map((film, index) => (
-                            <motion.div
-                                key={film.title}
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 0.4, delay: 0.6 + index * 0.1 }}
-                                className="bg-gradient-to-br from-accent to-accent-dark rounded-xl aspect-[2/3] flex flex-col items-center justify-center p-4 text-center"
-                            >
-                                <p className="font-heading text-lg text-white mb-2">{film.title}</p>
-                                <span className="inline-flex items-center gap-1 text-primary text-sm font-medium">
-                                    🏆 {film.nominations} nominations
-                                </span>
-                            </motion.div>
-                        ))}
-                    </div>
+                    <FeaturedCarousel
+                        films={[
+                            { title: 'Sinners', nominations: 16, year: 2025 },
+                            { title: 'One Battle after Another', nominations: 12, year: 2025 },
+                            { title: 'Hamnet', nominations: 10, year: 2025 },
+                            { title: 'Marty Supreme', nominations: 9, year: 2025 },
+                            { title: 'Frankenstein', nominations: 8, year: 2025 },
+                        ]}
+                    />
                 </motion.div>
             </section>
         </div>
