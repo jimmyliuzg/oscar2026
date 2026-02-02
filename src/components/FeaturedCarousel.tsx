@@ -51,8 +51,8 @@ export default function FeaturedCarousel({ films }: FeaturedCarouselProps) {
                             animate={{
                                 width: isActive ? '400px' : '150px',
                                 height: isActive ? '500px' : '400px',
-                                opacity: Math.abs(offset) > 2 ? 0 : 1,
-                                scale: Math.abs(offset) > 2 ? 0 : 1,
+                                opacity: Math.abs(offset) > 2 ? 0.3 : 1,
+                                scale: Math.abs(offset) > 2 ? 0.8 : 1,
                                 x: offset * 10,
                             }}
                             transition={{
@@ -140,8 +140,8 @@ export default function FeaturedCarousel({ films }: FeaturedCarouselProps) {
                         key={index}
                         onClick={() => setActiveIndex(index)}
                         className={`w-2 h-2 rounded-full transition-all duration-300 ${index === activeIndex
-                                ? 'bg-primary w-8'
-                                : 'bg-accent-light hover:bg-accent'
+                            ? 'bg-primary w-8'
+                            : 'bg-accent-light hover:bg-accent'
                             }`}
                         aria-label={`Go to slide ${index + 1}`}
                     />

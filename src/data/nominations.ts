@@ -347,14 +347,34 @@ export const aboveTheLineCategories = categories.filter(c => c.isAboveTheLine);
 // Helper to get below the line categories
 export const belowTheLineCategories = categories.filter(c => !c.isAboveTheLine);
 
-// Get unique films for the carousel
+// Get unique films for the carousel - only 2025 nominees
 export function getUniqueFilms(): string[] {
     const films = new Set<string>();
+
+    // Only include films from categories that are competing in 2025
+    // Exclude documentary and short film categories as they may be from other years
+    const excludedCategories = [
+        'documentaryFeature',
+        'documentaryShort',
+        'animatedShort',
+        'liveActionShort'
+    ];
+
     categories.forEach(cat => {
+        // Skip excluded categories
+        if (excludedCategories.includes(cat.id)) {
+            return;
+        }
+
         cat.nominees.forEach(nom => {
-            films.add(nom.film);
+            // Only add films that have a year of 2025, or don't have a year specified
+            // (assuming films without year are current nominees)
+            if (!nom.year || nom.year === 2025) {
+                films.add(nom.film);
+            }
         });
     });
+
     return Array.from(films);
 }
 

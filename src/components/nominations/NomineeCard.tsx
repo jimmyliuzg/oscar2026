@@ -132,7 +132,7 @@ export default function NomineeCard({
                 <div className="p-4">
                     <h4 className="font-medium text-text mb-1 line-clamp-1">{nominee.film}</h4>
                     {nominee.director && (
-                        <p className="text-sm text-text-light line-clamp-1">Dir: {nominee.director}</p>
+                        <p className="text-sm text-text-light line-clamp-1">{nominee.director}</p>
                     )}
                 </div>
             </motion.button>

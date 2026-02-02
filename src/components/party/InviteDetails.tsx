@@ -65,7 +65,7 @@ export default function InviteDetails() {
                         icon="📅"
                         label="Date & Time"
                         value="Sunday, March 15, 2026"
-                        subValue="6:00 PM - Red Carpet starts at 5:00 PM"
+                        subValue="4:00 PM - Red Carpet starts at 3:00 PM PST"
                     />
 
                     <DetailItem
