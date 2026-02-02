@@ -8,7 +8,7 @@ async function sha256(message: string): Promise<string> {
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 }
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
     try {
         const body = await request.json();
         const { password } = body;
@@ -20,9 +20,14 @@ export const POST: APIRoute = async ({ request }) => {
             );
         }
 
-        // Get password hashes from server-side environment variables (never exposed to client)
-        const guestHash = import.meta.env.GUEST_PASSWORD_HASH;
-        const publicHash = import.meta.env.PUBLIC_PASSWORD_HASH;
+        // Get password hashes from environment variables
+        // On Cloudflare Pages, runtime secrets are in locals.runtime.env
+        // In local dev, they're in import.meta.env from .env file
+        const runtime = (locals as any)?.runtime;
+        const env = runtime?.env || {};
+
+        const guestHash = env.GUEST_PASSWORD_HASH || import.meta.env.GUEST_PASSWORD_HASH;
+        const publicHash = env.PUBLIC_PASSWORD_HASH || import.meta.env.PUBLIC_PASSWORD_HASH;
 
         // Validate that hashes are configured
         if (!guestHash && !publicHash) {
