@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { getMoviePoster } from '../../services/omdb';
+import { getNomineeImage } from '../../services/tmdb';
 import { Nominee } from '../../data/nominations';
 import TrailerModal from '../common/TrailerModal';
 
@@ -129,24 +129,27 @@ export default function NomineeCard({
     showPoster = true,
     compact = false,
 }: NomineeCardProps) {
-    const [posterUrl, setPosterUrl] = useState<string | null>(null);
+    const [imageUrl, setImageUrl] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [showTrailer, setShowTrailer] = useState(false);
 
     // Get display content based on category
     const content = getCardContent(nominee, categoryId);
+    const displayMode = getDisplayMode(categoryId);
 
     useEffect(() => {
         if (showPoster) {
             setIsLoading(true);
-            getMoviePoster(nominee.film, nominee.year)
+            // Use TMDB to get appropriate image based on category type
+            // Person-focused categories get person images, film-focused get posters
+            getNomineeImage(nominee.name, nominee.film, nominee.year, categoryId, 'medium')
                 .then(url => {
-                    setPosterUrl(url);
+                    setImageUrl(url);
                     setIsLoading(false);
                 })
                 .catch(() => setIsLoading(false));
         }
-    }, [nominee.film, nominee.year, showPoster]);
+    }, [nominee.name, nominee.film, nominee.year, categoryId, showPoster]);
 
     // Generate a gradient based on film name for fallback
     const gradientColors = [
@@ -198,11 +201,11 @@ export default function NomineeCard({
                     <div className="aspect-[2/3] relative overflow-hidden">
                         {isLoading ? (
                             <div className="absolute inset-0 bg-accent-light animate-pulse" />
-                        ) : posterUrl ? (
+                        ) : imageUrl ? (
                             <img
-                                src={posterUrl}
-                                alt={nominee.film}
-                                className="w-full h-full object-cover"
+                                src={imageUrl}
+                                alt={displayMode === 'person-focused' ? nominee.name : nominee.film}
+                                className={`w-full h-full ${displayMode === 'person-focused' ? 'object-cover object-top' : 'object-cover'}`}
                                 loading="lazy"
                             />
                         ) : (
