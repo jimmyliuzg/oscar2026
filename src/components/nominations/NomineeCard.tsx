@@ -230,8 +230,8 @@ export default function NomineeCard({
                             </motion.div>
                         )}
 
-                        {/* Play button for trailers */}
-                        {nominee.trailerUrl && (
+                        {/* Play button for trailers - only show for Best Picture */}
+                        {categoryId === 'bestPicture' && nominee.trailerUrl && (
                             <motion.button
                                 onClick={handlePlayTrailer}
                                 whileHover={{ scale: 1.1 }}
