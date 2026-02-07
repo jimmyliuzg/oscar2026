@@ -11,7 +11,7 @@ export default function Footer() {
                     </div>
 
                     <p className="text-text-muted text-sm">
-                        Sunday, March 15, 2026 • 7:00 PM
+                        Sunday, March 15, 2026 • 4:00 PM
                     </p>
 
                     <p className="text-text-muted text-xs">

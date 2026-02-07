@@ -334,3 +334,76 @@ export async function getMovieBackdrop(
     const movie = await searchMovie(title, year);
     return getImageUrl(movie?.backdrop_path || null, 'backdrop', size);
 }
+
+/**
+ * Get TMDB movie page URL
+ */
+export async function getMovieTmdbUrl(
+    title: string,
+    year?: number
+): Promise<string | null> {
+    const movie = await searchMovie(title, year);
+    if (!movie) return null;
+
+    // Create slug from title
+    const slug = movie.title.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    return `https://www.themoviedb.org/movie/${movie.id}-${slug}`;
+}
+
+/**
+ * Get TMDB person page URL
+ */
+export async function getPersonTmdbUrl(name: string): Promise<string | null> {
+    const person = await searchPerson(name);
+    if (!person) return null;
+
+    // Create slug from name
+    const slug = person.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    return `https://www.themoviedb.org/person/${person.id}-${slug}`;
+}
+
+/**
+ * Get appropriate TMDB URL based on category type
+ * Returns person URL for person-focused categories, movie URL for film-focused
+ */
+export async function getNomineeTmdbUrl(
+    nomineeName: string,
+    filmTitle: string,
+    filmYear?: number,
+    categoryId?: string
+): Promise<string | null> {
+    // Person-focused categories - get person URL
+    const personCategories = [
+        'directing',
+        'actorLeading',
+        'actressLeading',
+        'actorSupporting',
+        'actressSupporting',
+        'originalScreenplay',
+        'adaptedScreenplay',
+        'cinematography',
+        'costumeDesign',
+        'filmEditing',
+        'originalScore',
+        'casting',
+    ];
+
+    if (categoryId && personCategories.includes(categoryId)) {
+        // Handle multiple people - use first person
+        let primaryName = nomineeName;
+        const separators = [' & ', ', ', ' and '];
+
+        for (const separator of separators) {
+            if (primaryName.includes(separator)) {
+                primaryName = primaryName.split(separator)[0];
+                break;
+            }
+        }
+
+        return getPersonTmdbUrl(primaryName.trim());
+    }
+
+    // Film-focused categories - get movie URL
+    return getMovieTmdbUrl(filmTitle, filmYear);
+}
+

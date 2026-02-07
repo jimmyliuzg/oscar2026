@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { getNomineeImage } from '../../services/tmdb';
+import { getNomineeImage, getNomineeTmdbUrl } from '../../services/tmdb';
 import { Nominee } from '../../data/nominations';
 import TrailerModal from '../common/TrailerModal';
 
@@ -130,6 +130,7 @@ export default function NomineeCard({
     compact = false,
 }: NomineeCardProps) {
     const [imageUrl, setImageUrl] = useState<string | null>(null);
+    const [tmdbUrl, setTmdbUrl] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [showTrailer, setShowTrailer] = useState(false);
 
@@ -151,6 +152,13 @@ export default function NomineeCard({
                 .catch(() => setIsLoading(false));
         }
     }, [nominee.name, nominee.film, nominee.year, categoryId, showPoster]);
+
+    // Fetch TMDB URL for linking
+    useEffect(() => {
+        getNomineeTmdbUrl(nominee.name, nominee.film, nominee.year, categoryId)
+            .then(url => setTmdbUrl(url))
+            .catch(() => setTmdbUrl(null));
+    }, [nominee.name, nominee.film, nominee.year, categoryId]);
 
     // Generate a gradient based on film name for fallback
     const gradientColors = [
@@ -188,12 +196,22 @@ export default function NomineeCard({
         setShowTrailer(true);
     };
 
+    const handleCardClick = () => {
+        // If there's a TMDB URL and this is not a selection context (voting), open TMDB
+        if (tmdbUrl && !onSelect) {
+            window.open(tmdbUrl, '_blank', 'noopener,noreferrer');
+        } else if (onSelect) {
+            // Otherwise use the normal selection handler for voting
+            onSelect();
+        }
+    };
+
     return (
         <>
             <motion.button
                 whileHover={{ y: -4 }}
                 whileTap={{ scale: 0.98 }}
-                onClick={onSelect}
+                onClick={handleCardClick}
                 onMouseEnter={onHover}
                 className={`nominee-card w-full text-left ${isSelected ? 'selected' : ''}`}
             >
