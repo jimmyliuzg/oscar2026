@@ -16,6 +16,8 @@ export const GET: APIRoute = async ({ request }) => {
     const url = new URL(request.url);
     const endpoint = url.searchParams.get('endpoint');
 
+    console.log('TMDB API proxy called with endpoint:', endpoint);
+
     if (!endpoint) {
         return new Response(
             JSON.stringify({ error: 'Missing endpoint parameter' }),
@@ -27,9 +29,15 @@ export const GET: APIRoute = async ({ request }) => {
     const apiToken = import.meta.env.TMDB_API_READ_TOKEN;
 
     if (!apiToken) {
+        // Enhanced error logging for debugging
         console.error('TMDB_API_READ_TOKEN is not configured');
+        console.error('Available env vars:', Object.keys(import.meta.env));
         return new Response(
-            JSON.stringify({ error: 'API not configured' }),
+            JSON.stringify({
+                error: 'API not configured',
+                message: 'TMDB_API_READ_TOKEN environment variable is missing',
+                availableEnvVars: Object.keys(import.meta.env)
+            }),
             { status: 500, headers: { 'Content-Type': 'application/json' } }
         );
     }
