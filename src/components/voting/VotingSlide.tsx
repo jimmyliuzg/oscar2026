@@ -58,13 +58,14 @@ export default function VotingSlide({
             {/* Nominees grid */}
             <div className="flex-1">
                 <div className={`grid gap-4 ${category.nominees.length <= 5
-                        ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-5 max-w-4xl mx-auto'
-                        : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'
+                    ? 'grid-cols-2 sm:grid-cols-3 md:grid-cols-5 max-w-4xl mx-auto'
+                    : 'grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'
                     }`}>
                     {category.nominees.map((nominee) => (
                         <NomineeCard
                             key={nominee.id}
                             nominee={nominee}
+                            categoryId={category.id}
                             isSelected={selectedId === nominee.id}
                             onSelect={() => onSelect(nominee)}
                             showPoster={true}

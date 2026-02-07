@@ -4,8 +4,115 @@ import { getMoviePoster } from '../../services/omdb';
 import { Nominee } from '../../data/nominations';
 import TrailerModal from '../common/TrailerModal';
 
+// Category types that determine how cards are displayed
+type DisplayMode =
+    | 'film-focused'      // Best Picture, Animated Feature, etc. - film is primary
+    | 'person-focused'    // Director, Actor, Writer, etc. - person is primary
+    | 'song-focused'      // Original Song - song title is primary
+    | 'film-only';        // Shorts, Docs - just the title
+
+interface CardContent {
+    heading: string;
+    subheading?: string;
+    tertiaryInfo?: string;
+}
+
+/** Determine display mode based on category ID */
+function getDisplayMode(categoryId?: string): DisplayMode {
+    if (!categoryId) return 'film-focused';
+
+    // Person-focused categories (name is the main content)
+    const personFocused = [
+        'directing',
+        'actorLeading',
+        'actressLeading',
+        'actorSupporting',
+        'actressSupporting',
+        'originalScreenplay',
+        'adaptedScreenplay',
+        'cinematography',
+        'costumeDesign',
+        'filmEditing',
+        'originalScore',
+        'casting',
+    ];
+
+    // Film-focused categories use the default case: bestPicture, animatedFeature,
+    // internationalFeature, productionDesign, sound, visualEffects, makeupHairstyling
+
+    // Song-focused (song title is primary)
+    const songFocused = ['originalSong'];
+
+    // Film-only categories (shorts, docs - just show title)
+    const filmOnly = [
+        'animatedShort',
+        'documentaryFeature',
+        'documentaryShort',
+        'liveActionShort',
+    ];
+
+    if (personFocused.includes(categoryId)) return 'person-focused';
+    if (songFocused.includes(categoryId)) return 'song-focused';
+    if (filmOnly.includes(categoryId)) return 'film-only';
+    return 'film-focused';
+}
+
+/** Get appropriate card content based on category and nominee */
+function getCardContent(nominee: Nominee, categoryId?: string): CardContent {
+    const mode = getDisplayMode(categoryId);
+
+    switch (mode) {
+        case 'person-focused':
+            // Person's name as heading, film as subheading
+            return {
+                heading: nominee.name,
+                subheading: nominee.film,
+            };
+
+        case 'song-focused':
+            // Song title as heading, film as subheading
+            return {
+                heading: nominee.name, // e.g., "Dear Me"
+                subheading: nominee.film,
+            };
+
+        case 'film-only':
+            // Just the film/short title
+            return {
+                heading: nominee.film,
+            };
+
+        case 'film-focused':
+        default:
+            // Film as heading, with additional info as subheading
+            if (categoryId === 'bestPicture' && nominee.producers) {
+                return {
+                    heading: nominee.film,
+                    subheading: nominee.producers,
+                };
+            }
+            if (categoryId === 'internationalFeature' && nominee.description) {
+                return {
+                    heading: nominee.film,
+                    subheading: nominee.description, // Country
+                };
+            }
+            if (categoryId === 'animatedFeature' && nominee.description) {
+                return {
+                    heading: nominee.film,
+                    subheading: nominee.description, // Producers/Directors
+                };
+            }
+            return {
+                heading: nominee.film,
+                subheading: nominee.director,
+            };
+    }
+}
+
 interface NomineeCardProps {
     nominee: Nominee;
+    categoryId?: string; // Category ID to determine display format
     isSelected?: boolean;
     onSelect?: () => void;
     onHover?: () => void;
@@ -15,6 +122,7 @@ interface NomineeCardProps {
 
 export default function NomineeCard({
     nominee,
+    categoryId,
     isSelected = false,
     onSelect,
     onHover,
@@ -24,6 +132,9 @@ export default function NomineeCard({
     const [posterUrl, setPosterUrl] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [showTrailer, setShowTrailer] = useState(false);
+
+    // Get display content based on category
+    const content = getCardContent(nominee, categoryId);
 
     useEffect(() => {
         if (showPoster) {
@@ -60,8 +171,10 @@ export default function NomineeCard({
                     : 'bg-background-elevated border border-accent-light hover:border-primary-light'
                     }`}
             >
-                <p className="font-medium text-text">{nominee.name}</p>
-                <p className="text-sm text-text-light">{nominee.film}</p>
+                <p className="font-medium text-text">{content.heading}</p>
+                {content.subheading && (
+                    <p className="text-sm text-text-light line-clamp-1">{content.subheading}</p>
+                )}
             </motion.button>
         );
     }
@@ -128,11 +241,14 @@ export default function NomineeCard({
                     </div>
                 )}
 
-                {/* Content */}
+                {/* Content - Dynamic based on category */}
                 <div className="p-4">
-                    <h4 className="font-medium text-text mb-1 line-clamp-1">{nominee.film}</h4>
-                    {nominee.director && (
-                        <p className="text-sm text-text-light line-clamp-1">{nominee.director}</p>
+                    <h4 className="font-medium text-text mb-1 line-clamp-2">{content.heading}</h4>
+                    {content.subheading && (
+                        <p className="text-sm text-text-light line-clamp-2">{content.subheading}</p>
+                    )}
+                    {content.tertiaryInfo && (
+                        <p className="text-xs text-text-muted mt-1 line-clamp-1">{content.tertiaryInfo}</p>
                     )}
                 </div>
             </motion.button>

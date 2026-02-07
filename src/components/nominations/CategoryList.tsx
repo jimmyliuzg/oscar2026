@@ -59,6 +59,7 @@ export default function CategoryList({ categories, onNomineeHover }: CategoryLis
                                                 <NomineeCard
                                                     key={nominee.id}
                                                     nominee={nominee}
+                                                    categoryId={category.id}
                                                     onHover={() => onNomineeHover?.(nominee.film)}
                                                     showPoster={category.isAboveTheLine}
                                                 />
