@@ -303,8 +303,20 @@ export async function getNomineeImage(
     ];
 
     if (categoryId && personCategories.includes(categoryId)) {
+        // Handle multiple people (e.g., "Person A & Person B" or "Person A, Person B")
+        // We take the first person found to display their image
+        let primaryName = nomineeName;
+        const separators = [' & ', ', ', ' and '];
+
+        for (const separator of separators) {
+            if (primaryName.includes(separator)) {
+                primaryName = primaryName.split(separator)[0];
+                break;
+            }
+        }
+
         // Try to get person image from movie credits first
-        return getPersonImageFromMovie(nomineeName, filmTitle, filmYear, size);
+        return getPersonImageFromMovie(primaryName.trim(), filmTitle, filmYear, size);
     }
 
     // Film-focused categories - get movie poster

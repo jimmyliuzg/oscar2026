@@ -142,7 +142,8 @@ export default function NomineeCard({
             setIsLoading(true);
             // Use TMDB to get appropriate image based on category type
             // Person-focused categories get person images, film-focused get posters
-            getNomineeImage(nominee.name, nominee.film, nominee.year, categoryId, 'medium')
+            // Use 'large' size for better quality - profile images will be h632
+            getNomineeImage(nominee.name, nominee.film, nominee.year, categoryId, 'large')
                 .then(url => {
                     setImageUrl(url);
                     setIsLoading(false);
@@ -198,14 +199,14 @@ export default function NomineeCard({
             >
                 {/* Poster */}
                 {showPoster && (
-                    <div className="aspect-[2/3] relative overflow-hidden">
+                    <div className="aspect-[2/3] relative overflow-hidden bg-neutral-200">
                         {isLoading ? (
                             <div className="absolute inset-0 bg-accent-light animate-pulse" />
                         ) : imageUrl ? (
                             <img
                                 src={imageUrl}
                                 alt={displayMode === 'person-focused' ? nominee.name : nominee.film}
-                                className={`w-full h-full ${displayMode === 'person-focused' ? 'object-cover object-top' : 'object-cover'}`}
+                                className="absolute inset-0 w-full h-full object-cover"
                                 loading="lazy"
                             />
                         ) : (
