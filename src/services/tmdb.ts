@@ -88,6 +88,36 @@ interface TMDBSearchPersonResponse {
     total_results: number;
 }
 
+interface TMDBPersonImage {
+    file_path: string;
+    width: number;
+    height: number;
+    aspect_ratio: number;
+    vote_average: number;
+    vote_count: number;
+}
+
+interface TMDBPersonImagesResponse {
+    id: number;
+    profiles: TMDBPersonImage[];
+}
+
+interface TMDBMovieImage {
+    file_path: string;
+    width: number;
+    height: number;
+    aspect_ratio: number;
+    iso_639_1: string | null;
+    vote_average: number;
+    vote_count: number;
+}
+
+interface TMDBMovieImagesResponse {
+    id: number;
+    posters: TMDBMovieImage[];
+    backdrops: TMDBMovieImage[];
+}
+
 // Caches to reduce API calls
 const movieCache = new Map<string, TMDBMovie | null>();
 const personCache = new Map<string, TMDBPerson | null>();
@@ -189,6 +219,24 @@ export async function searchPerson(name: string): Promise<TMDBPerson | null> {
 }
 
 /**
+ * Get person images using the documented TMDB API
+ * GET /3/person/{person_id}/images
+ */
+export async function getPersonImages(personId: number): Promise<TMDBPersonImagesResponse | null> {
+    const endpoint = `/person/${personId}/images`;
+    return await tmdbFetch<TMDBPersonImagesResponse>(endpoint);
+}
+
+/**
+ * Get movie images using the documented TMDB API  
+ * GET /3/movie/{movie_id}/images
+ */
+export async function getMovieImages(movieId: number): Promise<TMDBMovieImagesResponse | null> {
+    const endpoint = `/movie/${movieId}/images`;
+    return await tmdbFetch<TMDBMovieImagesResponse>(endpoint);
+}
+
+/**
  * Get movie credits (cast and crew)
  */
 export async function getMovieCredits(movieId: number): Promise<TMDBCreditsResponse | null> {
@@ -209,7 +257,7 @@ export async function getMovieCredits(movieId: number): Promise<TMDBCreditsRespo
 }
 
 /**
- * Get movie poster URL
+ * Get movie poster URL using the proper TMDB images endpoint
  */
 export async function getMoviePoster(
     title: string,
@@ -217,17 +265,51 @@ export async function getMoviePoster(
     size: 'small' | 'medium' | 'large' | 'original' = 'medium'
 ): Promise<string | null> {
     const movie = await searchMovie(title, year);
+    if (!movie) return null;
+
+    // Fetch images using the documented endpoint
+    const images = await getMovieImages(movie.id);
+
+    if (images?.posters && images.posters.length > 0) {
+        // Prefer English posters, then highest rated
+        const englishPosters = images.posters.filter(p => p.iso_639_1 === 'en' || p.iso_639_1 === null);
+        const postersToSort = englishPosters.length > 0 ? englishPosters : images.posters;
+
+        // Sort by vote_average and select highest rated poster
+        const sortedPosters = [...postersToSort].sort((a, b) => b.vote_average - a.vote_average);
+        const bestPoster = sortedPosters[0];
+
+        // Build image URL with proper TMDB image base URL
+        return getImageUrl(bestPoster.file_path, 'poster', size);
+    }
+
+    // Fallback to poster_path from search if images endpoint returns nothing
     return getImageUrl(movie?.poster_path || null, 'poster', size);
 }
 
 /**
- * Get person profile image URL
+ * Get person profile image URL using the proper TMDB images endpoint
  */
 export async function getPersonImage(
     name: string,
     size: 'small' | 'medium' | 'large' | 'original' = 'medium'
 ): Promise<string | null> {
     const person = await searchPerson(name);
+    if (!person) return null;
+
+    // Fetch images using the documented endpoint
+    const images = await getPersonImages(person.id);
+
+    if (images?.profiles && images.profiles.length > 0) {
+        // Sort by vote_average and select highest rated image
+        const sortedProfiles = [...images.profiles].sort((a, b) => b.vote_average - a.vote_average);
+        const bestProfile = sortedProfiles[0];
+
+        // Build image URL with proper TMDB image base URL
+        return getImageUrl(bestProfile.file_path, 'profile', size);
+    }
+
+    // Fallback to profile_path from search if images endpoint returns nothing
     return getImageUrl(person?.profile_path || null, 'profile', size);
 }
 
@@ -324,7 +406,7 @@ export async function getNomineeImage(
 }
 
 /**
- * Get movie backdrop image (for featured sections)
+ * Get movie backdrop image (for featured sections) using the proper TMDB images endpoint
  */
 export async function getMovieBackdrop(
     title: string,
@@ -332,6 +414,21 @@ export async function getMovieBackdrop(
     size: 'small' | 'medium' | 'large' | 'original' = 'medium'
 ): Promise<string | null> {
     const movie = await searchMovie(title, year);
+    if (!movie) return null;
+
+    // Fetch images using the documented endpoint
+    const images = await getMovieImages(movie.id);
+
+    if (images?.backdrops && images.backdrops.length > 0) {
+        // Sort by vote_average and select highest rated backdrop
+        const sortedBackdrops = [...images.backdrops].sort((a, b) => b.vote_average - a.vote_average);
+        const bestBackdrop = sortedBackdrops[0];
+
+        // Build image URL with proper TMDB image base URL
+        return getImageUrl(bestBackdrop.file_path, 'backdrop', size);
+    }
+
+    // Fallback to backdrop_path from search if images endpoint returns nothing
     return getImageUrl(movie?.backdrop_path || null, 'backdrop', size);
 }
 
