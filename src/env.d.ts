@@ -10,9 +10,6 @@ interface ImportMetaEnv {
 
     // Public variables (can be used client-side)
     readonly PUBLIC_WEB3FORMS_ACCESS_KEY: string;
-
-    // Legacy - keeping for reference but no longer used
-    // readonly PUBLIC_OMDB_API_KEY: string;
 }
 
 interface ImportMeta {

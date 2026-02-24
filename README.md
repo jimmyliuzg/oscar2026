@@ -19,7 +19,7 @@ A modern, mobile-first web application for hosting an engaging Oscars party expe
 - **Framer Motion** for animations
 - **React Hook Form** for forms
 - **Web3Forms** for form submissions
-- **OMDb API** for movie posters
+- **TMDB API** for movie posters and person images
 - **Cloudflare Pages** for deployment
 
 ## Getting Started
@@ -52,7 +52,9 @@ PUBLIC_PASSWORD_HASH=your_sha256_hash_here
 
 # Public variables (accessible on client-side)
 PUBLIC_WEB3FORMS_ACCESS_KEY=your_key_here
-PUBLIC_OMDB_API_KEY=your_omdb_key_here
+
+# TMDB API token (server-side only)
+TMDB_API_READ_TOKEN=your_tmdb_read_access_token_here
 ```
 
 > **Important**: In Astro, environment variables without the `PUBLIC_` prefix are server-side only and never exposed to the client bundle. This keeps your password hashes secure.
@@ -109,7 +111,7 @@ hashPassword('oscar2026').then(console.log);
    GUEST_PASSWORD_HASH=<your_sha256_hash>
    PUBLIC_PASSWORD_HASH=<your_sha256_hash>
    PUBLIC_WEB3FORMS_ACCESS_KEY=<your_web3forms_key>
-   PUBLIC_OMDB_API_KEY=<your_omdb_key>
+   TMDB_API_READ_TOKEN=<your_tmdb_read_access_token>
    ```
 
 5. **Deploy** - Cloudflare will automatically build and deploy your site
@@ -126,7 +128,7 @@ hashPassword('oscar2026').then(console.log);
 - Use strong, unique passwords
 - Generate new password hashes
 - Never commit `.env` or `.env.local` files to Git
-- Keep your Web3Forms and OMDb API keys private
+- Keep your Web3Forms and TMDB API keys private
 
 ## Project Structure
 

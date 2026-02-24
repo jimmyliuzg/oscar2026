@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getMoviePoster } from '../services/omdb';
+import { getMoviePoster } from '../services/tmdb';
 
 interface FeaturedFilm {
     title: string;

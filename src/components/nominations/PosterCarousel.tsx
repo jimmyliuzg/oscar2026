@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getMoviePoster } from '../../services/omdb';
+import { getMoviePoster } from '../../services/tmdb';
 import { getUniqueFilms } from '../../data/nominations';
 
 interface PosterCarouselProps {
@@ -11,7 +11,7 @@ export default function PosterCarousel({ highlightedFilm }: PosterCarouselProps)
     const [currentFilm, setCurrentFilm] = useState<string>('');
     const [posterUrl, setPosterUrl] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [autoPlayTimer, setAutoPlayTimer] = useState<NodeJS.Timeout | null>(null);
+    const [autoPlayTimer, setAutoPlayTimer] = useState<ReturnType<typeof setInterval> | null>(null);
 
     const films = getUniqueFilms();
 
