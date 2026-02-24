@@ -12,7 +12,7 @@ import type { APIRoute } from 'astro';
 
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
 
-export const GET: APIRoute = async ({ request }) => {
+export const GET: APIRoute = async ({ request, locals }) => {
     const url = new URL(request.url);
     const endpoint = url.searchParams.get('endpoint');
 
@@ -26,7 +26,10 @@ export const GET: APIRoute = async ({ request }) => {
     }
 
     // Get API token from environment
-    const apiToken = import.meta.env.TMDB_API_READ_TOKEN;
+    // On Cloudflare Pages, runtime env vars are accessed via locals.runtime.env
+    // import.meta.env only has build-time variables
+    const runtime = (locals as any).runtime;
+    const apiToken = runtime?.env?.TMDB_API_READ_TOKEN || import.meta.env.TMDB_API_READ_TOKEN;
 
     if (!apiToken) {
         // Enhanced error logging for debugging
