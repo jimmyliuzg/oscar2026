@@ -301,9 +301,23 @@ export async function getPersonImage(
     const images = await getPersonImages(person.id);
 
     if (images?.profiles && images.profiles.length > 0) {
-        // Sort by vote_average and select highest rated image
-        const sortedProfiles = [...images.profiles].sort((a, b) => b.vote_average - a.vote_average);
-        const bestProfile = sortedProfiles[0];
+        // Target aspect ratio of 3:4 (0.75) to match our card containers
+        const TARGET_ASPECT_RATIO = 0.75;
+
+        // Score images by how close they are to our target aspect ratio,
+        // weighted by vote average and minimum resolution
+        const scoredProfiles = images.profiles
+            .filter(p => p.width >= 185 && p.height >= 247) // Min resolution filter
+            .map(p => {
+                const aspectDiff = Math.abs(p.aspect_ratio - TARGET_ASPECT_RATIO);
+                // Lower aspect difference = better fit; higher vote = better quality
+                // Aspect ratio match is weighted more heavily than votes
+                const score = (1 / (1 + aspectDiff * 5)) + (p.vote_average * 0.1);
+                return { ...p, score };
+            })
+            .sort((a, b) => b.score - a.score);
+
+        const bestProfile = scoredProfiles.length > 0 ? scoredProfiles[0] : images.profiles[0];
 
         // Build image URL with proper TMDB image base URL
         return getImageUrl(bestProfile.file_path, 'profile', size);

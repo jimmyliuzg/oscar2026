@@ -78,8 +78,8 @@ export default function InviteDetails() {
                     <DetailItem
                         icon="👔"
                         label="Dress Code"
-                        value="Smart Casual"
-                        subValue="Or inspired by the nominees!"
+                        value="Nominee Inspired Outfits"
+                        subValue="or your red carpet best!"
                     />
 
                     <DetailItem

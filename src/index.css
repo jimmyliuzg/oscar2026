@@ -13,7 +13,12 @@
     min-height: 100vh;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-heading;
   }
 
@@ -37,45 +42,30 @@
 
 /* Component layer */
 @layer components {
+
   /* Primary button */
   .btn-primary {
-    @apply bg-primary text-text px-8 py-3 rounded-md font-semibold 
-           shadow-golden transition-all duration-300 ease-out
-           hover:bg-primary-dark hover:-translate-y-0.5 hover:shadow-golden-lg
-           active:translate-y-0 active:shadow-golden
-           disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0;
+    @apply bg-primary text-text px-8 py-3 rounded-md font-semibold shadow-golden transition-all duration-300 ease-out hover:bg-primary-dark hover:-translate-y-0.5 hover:shadow-golden-lg active:translate-y-0 active:shadow-golden disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0;
   }
 
   /* Secondary button */
   .btn-secondary {
-    @apply bg-secondary text-background-elevated px-8 py-3 rounded-md font-semibold
-           transition-all duration-300 ease-out
-           hover:bg-secondary-dark
-           disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply bg-secondary text-background-elevated px-8 py-3 rounded-md font-semibold transition-all duration-300 ease-out hover:bg-secondary-dark disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   /* Outline button */
   .btn-outline {
-    @apply bg-transparent text-primary border-2 border-primary px-8 py-3 rounded-md font-semibold
-           transition-all duration-300 ease-out
-           hover:bg-primary-light
-           disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply bg-transparent text-primary border-2 border-primary px-8 py-3 rounded-md font-semibold transition-all duration-300 ease-out hover:bg-primary-light disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   /* Input field */
   .input {
-    @apply w-full bg-background-elevated border-2 border-accent-light rounded-md
-           px-4 py-3 text-base text-text transition-all duration-300
-           placeholder:text-text-muted
-           focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary-light
-           disabled:bg-accent-light disabled:text-text-muted disabled:cursor-not-allowed;
+    @apply w-full bg-background-elevated border-2 border-accent-light rounded-md px-4 py-3 text-base text-text transition-all duration-300 placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary-light disabled:bg-accent-light disabled:text-text-muted disabled:cursor-not-allowed;
   }
 
   /* Card */
   .card {
-    @apply bg-background-elevated border border-accent-light rounded-lg p-6
-           shadow-md transition-all duration-300 ease-out
-           hover:-translate-y-1 hover:shadow-lg hover:border-primary-light;
+    @apply bg-background-elevated border border-accent-light rounded-lg p-6 shadow-md transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg hover:border-primary-light;
   }
 
   /* Card selected state */
@@ -85,9 +75,14 @@
 
   /* Nominee card */
   .nominee-card {
-    @apply relative bg-background-elevated rounded-lg overflow-hidden
-           shadow-md transition-all duration-300 ease-out cursor-pointer
-           hover:-translate-y-1 hover:shadow-lg hover:ring-2 hover:ring-primary-light;
+    @apply relative bg-background-elevated rounded-lg overflow-hidden shadow-md transition-all duration-300 ease-out cursor-pointer hover:-translate-y-1 hover:shadow-lg hover:ring-2 hover:ring-primary-light;
+    /* Ensure cards fill their grid cell height for consistency */
+    display: flex;
+    flex-direction: column;
+  }
+
+  .nominee-card img {
+    transition: opacity 0.3s ease-in;
   }
 
   .nominee-card.selected {
@@ -107,6 +102,7 @@
 
 /* Utility layer */
 @layer utilities {
+
   /* Text gradient */
   .text-gradient-gold {
     @apply bg-gradient-to-r from-primary to-primary-dark bg-clip-text text-transparent;

@@ -110,6 +110,31 @@ function getCardContent(nominee: Nominee, categoryId?: string): CardContent {
     }
 }
 
+/** Get the appropriate aspect ratio and object-position for the image container */
+function getImageStyles(mode: DisplayMode): {
+    aspectClass: string;
+    objectPosition: string;
+} {
+    switch (mode) {
+        case 'person-focused':
+            // Person headshots vary widely; 3:4 fits most headshots better
+            // Position toward the top to prioritize showing faces
+            return {
+                aspectClass: 'aspect-[3/4]',
+                objectPosition: 'object-[center_20%]',
+            };
+        case 'film-focused':
+        case 'song-focused':
+        case 'film-only':
+        default:
+            // Movie posters are consistently ~2:3
+            return {
+                aspectClass: 'aspect-[2/3]',
+                objectPosition: 'object-center',
+            };
+    }
+}
+
 interface NomineeCardProps {
     nominee: Nominee;
     categoryId?: string; // Category ID to determine display format
@@ -216,52 +241,55 @@ export default function NomineeCard({
                 className={`nominee-card w-full text-left ${isSelected ? 'selected' : ''}`}
             >
                 {/* Poster */}
-                {showPoster && (
-                    <div className="aspect-[2/3] relative overflow-hidden bg-neutral-200">
-                        {isLoading ? (
-                            <div className="absolute inset-0 bg-accent-light animate-pulse" />
-                        ) : imageUrl ? (
-                            <img
-                                src={imageUrl}
-                                alt={displayMode === 'person-focused' ? nominee.name : nominee.film}
-                                className="absolute inset-0 w-full h-full object-cover"
-                                loading="lazy"
-                            />
-                        ) : (
-                            <div
-                                className={`absolute inset-0 bg-gradient-to-br ${fromColor} ${toColor} flex items-center justify-center p-4`}
-                            >
-                                <span className="font-heading text-xl text-white text-center drop-shadow-lg">
-                                    {nominee.film}
-                                </span>
-                            </div>
-                        )}
+                {showPoster && (() => {
+                    const imageStyles = getImageStyles(displayMode);
+                    return (
+                        <div className={`${imageStyles.aspectClass} relative overflow-hidden bg-neutral-300`}>
+                            {isLoading ? (
+                                <div className="absolute inset-0 bg-accent-light animate-pulse" />
+                            ) : imageUrl ? (
+                                <img
+                                    src={imageUrl}
+                                    alt={displayMode === 'person-focused' ? nominee.name : nominee.film}
+                                    className={`absolute inset-0 w-full h-full object-cover ${imageStyles.objectPosition}`}
+                                    loading="lazy"
+                                />
+                            ) : (
+                                <div
+                                    className={`absolute inset-0 bg-gradient-to-br ${fromColor} ${toColor} flex items-center justify-center p-4`}
+                                >
+                                    <span className="font-heading text-xl text-white text-center drop-shadow-lg">
+                                        {nominee.film}
+                                    </span>
+                                </div>
+                            )}
 
-                        {/* Selection indicator */}
-                        {isSelected && (
-                            <motion.div
-                                initial={{ opacity: 0, scale: 0 }}
-                                animate={{ opacity: 1, scale: 1 }}
-                                className="absolute top-2 right-2 w-8 h-8 bg-primary rounded-full flex items-center justify-center shadow-golden"
-                            >
-                                <span className="text-text text-lg">✓</span>
-                            </motion.div>
-                        )}
+                            {/* Selection indicator */}
+                            {isSelected && (
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    className="absolute top-2 right-2 w-8 h-8 bg-primary rounded-full flex items-center justify-center shadow-golden"
+                                >
+                                    <span className="text-text text-lg">✓</span>
+                                </motion.div>
+                            )}
 
-                        {/* Play button for trailers - only show for Best Picture */}
-                        {categoryId === 'bestPicture' && nominee.trailerUrl && (
-                            <motion.button
-                                onClick={handlePlayTrailer}
-                                whileHover={{ scale: 1.1 }}
-                                whileTap={{ scale: 0.95 }}
-                                className="absolute bottom-2 right-2 w-10 h-10 bg-primary rounded-full flex items-center justify-center shadow-golden hover:bg-primary-dark transition-colors"
-                                aria-label="Watch trailer"
-                            >
-                                <span className="text-text text-lg ml-0.5">▶</span>
-                            </motion.button>
-                        )}
-                    </div>
-                )}
+                            {/* Play button for trailers - only show for Best Picture */}
+                            {categoryId === 'bestPicture' && nominee.trailerUrl && (
+                                <motion.button
+                                    onClick={handlePlayTrailer}
+                                    whileHover={{ scale: 1.1 }}
+                                    whileTap={{ scale: 0.95 }}
+                                    className="absolute bottom-2 right-2 w-10 h-10 bg-primary rounded-full flex items-center justify-center shadow-golden hover:bg-primary-dark transition-colors"
+                                    aria-label="Watch trailer"
+                                >
+                                    <span className="text-text text-lg ml-0.5">▶</span>
+                                </motion.button>
+                            )}
+                        </div>
+                    );
+                })()}
 
                 {/* Content - Dynamic based on category */}
                 <div className="p-4">
