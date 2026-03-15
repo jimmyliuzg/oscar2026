@@ -1,0 +1,8 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { ConnectedResults } from "../components/PageWrappers";
+---
+
+<Layout title="Results | 2026 Oscar Party">
+    <ConnectedResults client:only="react" />
+</Layout>

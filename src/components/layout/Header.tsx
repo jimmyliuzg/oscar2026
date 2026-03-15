@@ -14,6 +14,7 @@ export default function Header() {
         { path: '/', label: 'Home', guestOnly: false },
         { path: '/nominations', label: 'Nominations', guestOnly: false },
         { path: '/vote', label: 'Vote', guestOnly: false },
+        { path: '/results', label: 'Results', guestOnly: false },
     ];
 
     const filteredNavItems = navItems.filter(item => {
