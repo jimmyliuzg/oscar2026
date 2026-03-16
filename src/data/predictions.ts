@@ -10,6 +10,35 @@ export interface Participant {
 
 export const participants: Participant[] = [
     {
+        name: "Melanie",
+        predictions: {
+            "Best Picture": "Train Dreams - Train Dreams",
+            "Directing": "Chloé Zhao - Hamnet",
+            "Actor in a Leading Role": "Timothée Chalamet - Marty Supreme",
+            "Actress in a Leading Role": "Emma Stone - Bugonia",
+            "Actor in a Supporting Role": "Sean Penn - One Battle after Another",
+            "Actress in a Supporting Role": "Elle Fanning - Sentimental Value",
+            "Writing (Original Screenplay)": "Ryan Coogler - Sinners",
+            "Writing (Adapted Screenplay)": "Chloé Zhao & Maggie O'Farrell - Hamnet",
+            "Animated Feature Film": "KPop Demon Hunters - KPop Demon Hunters",
+            "International Feature Film": "The Voice of Hind Rajab - The Voice of Hind Rajab",
+            "Cinematography": "Autumn Durald Arkapaw - Sinners",
+            "Costume Design": "Malgosia Turzanska - Hamnet",
+            "Film Editing": "Michael P. Shawver - Sinners",
+            "Makeup and Hairstyling": "The Smashing Machine - The Smashing Machine",
+            "Music (Original Score)": "Ludwig Goransson - Sinners",
+            "Music (Original Song)": "\"Golden\" - KPop Demon Hunters",
+            "Production Design": "Hamnet - Hamnet",
+            "Sound": "Sinners - Sinners",
+            "Visual Effects": "Sinners - Sinners",
+            "Casting": "Nina Gold - Hamnet",
+            "Animated Short Film": "The Three Sisters - The Three Sisters",
+            "Documentary Feature Film": "The Perfect Neighbor - The Perfect Neighbor",
+            "Documentary Short Film": "Children No More - Children No More",
+            "Live Action Short Film": "The Singers - The Singers",
+        },
+    },
+    {
         name: "Kevin Zhang",
         predictions: {
             "Best Picture": "One Battle after Another - One Battle after Another",
