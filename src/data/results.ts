@@ -58,7 +58,7 @@ export const BELOW_THE_LINE_CATEGORIES = ALL_CATEGORIES.filter(
 );
 
 /** Point values */
-export const POINTS_ABOVE_THE_LINE = 5;
+export const POINTS_ABOVE_THE_LINE = 3;
 export const POINTS_BELOW_THE_LINE = 1;
 
 /** Get point value for a category */
