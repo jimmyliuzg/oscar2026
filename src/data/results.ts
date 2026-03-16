@@ -12,8 +12,8 @@
  */
 export const officialResults: Record<string, string> = {
     "Best Picture": "",
-    "Directing": "",
-    "Actor in a Leading Role": "",
+    "Directing": "Paul Thomas Anderson - One Battle after Another",
+    "Actor in a Leading Role": "Michael B. Jordan - Sinners",
     "Actress in a Leading Role": "",
     "Actor in a Supporting Role": "Sean Penn - One Battle after Another",
     "Actress in a Supporting Role": "Amy Madigan - Weapons",
