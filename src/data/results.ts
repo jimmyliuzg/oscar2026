@@ -15,7 +15,7 @@ export const officialResults: Record<string, string> = {
     "Directing": "",
     "Actor in a Leading Role": "",
     "Actress in a Leading Role": "",
-    "Actor in a Supporting Role": "",
+    "Actor in a Supporting Role": "Sean Penn - One Battle after Another",
     "Actress in a Supporting Role": "Amy Madigan - Weapons",
     "Writing (Original Screenplay)": "",
     "Writing (Adapted Screenplay)": "",
