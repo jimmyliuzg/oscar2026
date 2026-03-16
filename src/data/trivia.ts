@@ -125,5 +125,29 @@ export const triviaQuestions: TriviaQuestion[] = [
         question: 'To date, has any actor ever won an Oscar for a performance in an MCU film?',
         answer: 'No',
         connection: 'While several have been nominated (like Angela Bassett), none have won.'
+    },
+    {
+        difficulty: 'Easy',
+        question: 'Which 2026 film set the all-time record for the most nominations for a single movie with 16 nods?',
+        answer: 'Sinners',
+        connection: 'It broke the previous record of 14 nominations held by All About Eve, Titanic, and La La Land.'
+    },
+    {
+        difficulty: 'Easy',
+        question: 'Which 2024 film about the "father of the atomic bomb" won Best Picture?',
+        answer: 'Oppenheimer',
+        connection: 'It won 7 Academy Awards, including Best Picture, Best Director, and Best Actor.'
+    },
+    {
+        difficulty: 'Easy',
+        question: 'What is the maximum length an Oscar acceptance speech is "supposed" to be before the orchestra begins to play?',
+        answer: '45 seconds',
+        connection: 'The orchestra famously cuts off winners who go over the time limit.'
+    },
+    {
+        difficulty: 'Easy',
+        question: 'Which 2024 film won Best Original Song for the track "What Was I Made For?"?',
+        answer: 'Barbie',
+        connection: 'Billie Eilish and Finneas O\'Connell took home the trophy for this song.'
     }
 ];
