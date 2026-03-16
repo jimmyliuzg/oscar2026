@@ -143,6 +143,7 @@ interface NomineeCardProps {
     onHover?: () => void;
     showPoster?: boolean;
     compact?: boolean;
+    isWinner?: boolean;
 }
 
 export default function NomineeCard({
@@ -153,6 +154,7 @@ export default function NomineeCard({
     onHover,
     showPoster = true,
     compact = false,
+    isWinner = false,
 }: NomineeCardProps) {
     const [imageUrl, setImageUrl] = useState<string | null>(null);
     const [tmdbUrl, setTmdbUrl] = useState<string | null>(null);
@@ -238,7 +240,7 @@ export default function NomineeCard({
                 whileTap={{ scale: 0.98 }}
                 onClick={handleCardClick}
                 onMouseEnter={onHover}
-                className={`nominee-card w-full text-left ${isSelected ? 'selected' : ''}`}
+                className={`nominee-card w-full text-left ${isSelected ? 'selected' : ''} ${isWinner ? 'ring-2 ring-primary shadow-golden' : ''}`}
             >
                 {/* Poster */}
                 {showPoster && (() => {
@@ -262,6 +264,20 @@ export default function NomineeCard({
                                         {nominee.film}
                                     </span>
                                 </div>
+                            )}
+
+                            {/* Winner badge */}
+                            {isWinner && (
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{ delay: 0.1, type: 'spring', stiffness: 400 }}
+                                    className="absolute top-2 left-2 z-10"
+                                >
+                                    <span className="inline-flex items-center gap-0.5 bg-primary text-text text-xs font-bold px-2 py-1 rounded-full shadow-golden">
+                                        ✨ Winner
+                                    </span>
+                                </motion.div>
                             )}
 
                             {/* Selection indicator */}
@@ -308,10 +324,23 @@ export default function NomineeCard({
                 })()}
 
                 {/* Content - Dynamic based on category */}
-                <div className="p-4">
-                    <h4 className="font-medium text-text mb-1 line-clamp-2">{content.heading}</h4>
+                <div className="p-4 relative">
+                    {/* Winner badge for text-only cards */}
+                    {isWinner && !showPoster && (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 0.1, type: 'spring', stiffness: 400 }}
+                            className="absolute top-4 right-4"
+                        >
+                            <span className="inline-flex items-center gap-0.5 bg-primary/20 text-primary text-xs font-bold px-2 py-1 rounded-full border border-primary/30">
+                                🏆 Winner
+                            </span>
+                        </motion.div>
+                    )}
+                    <h4 className={`font-medium text-text mb-1 line-clamp-2 ${isWinner && !showPoster ? 'pr-20' : ''}`}>{content.heading}</h4>
                     {content.subheading && (
-                        <p className="text-sm text-text-light line-clamp-2">{content.subheading}</p>
+                        <p className={`text-sm text-text-light line-clamp-2 ${isWinner && !showPoster ? 'pr-20' : ''}`}>{content.subheading}</p>
                     )}
                     {content.tertiaryInfo && (
                         <p className="text-xs text-text-muted mt-1 line-clamp-1">{content.tertiaryInfo}</p>

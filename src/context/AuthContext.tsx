@@ -15,7 +15,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const STORAGE_KEY = 'oscar_access_level';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-    const [accessLevel, setAccessLevel] = useState<AccessLevel>('none');
+    const [accessLevel, setAccessLevel] = useState<AccessLevel>('public');
     const [isLoading, setIsLoading] = useState(true);
 
     // Restore session from sessionStorage on mount

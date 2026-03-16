@@ -1,180 +1,115 @@
-# 2026 Oscars Nominations and Predictions
+# 2026 Oscars Watch Party — Predictions & Results
 
-A modern, mobile-first web application for hosting an engaging Oscars party experience. Features password-protected party invitations, complete 2026 Oscar nominations with rich media, and an interactive voting system.
+A modern, mobile-first web application built for an Oscar watch party. Participants submitted predictions across all 24 Academy Award categories, and the app tracks live results as winners are announced, calculating scores in real time with a weighted scoring system.
 
-## Features
+Now repurposed as a **portfolio showcase** of the full event experience — nominations browser, live scoring engine, trivia, and polished UI.
 
-- 🔐 **Dual Password System** - Guest access for party details, public access for nominations/voting (server-side validation)
-- 🎬 **Full Nominations Browser** - All 24 Oscar categories with trailers and posters
-- 🗳️ **Interactive Voting** - Full-screen voting experience for predictions
-- 📱 **Mobile-First Design** - Responsive and touch-friendly
-- 🎨 **Beautiful Design** - Warm, glamorous aesthetic with golden accents
-- 🔒 **Secure** - Password hashes never exposed to client-side code
+## ✨ Features
 
-## Tech Stack
+- 🎬 **Full Nominations Browser** — All 24 Oscar categories with TMDB movie posters and actor headshots, trailers, and nominee details
+- 🏆 **Live Results Scorecard** — Weighted scoring system (major categories = 3pts, technical = 1pt) with a real-time leaderboard and category-by-category breakdown
+- 📊 **Dual Results View** — Leaderboard view with a podium + full table, and a category detail view with per-participant predictions
+- 🎯 **Prediction Tracking** — Per-participant, per-category results with ✅/❌ correctness indicators and a progress bar
+- 🎮 **Trivia Section** — Oscar trivia for engagement during the ceremony
+- 📱 **Mobile-First Design** — Fully responsive across all devices
+- 🎨 **Premium Aesthetic** — Warm gold-and-dark theme with Framer Motion animations, glassmorphism, and micro-interactions
+- 🌐 **TMDB API Integration** — Dynamic movie posters and person images via The Movie Database
 
-- **Astro 5** with server-side rendering
-- **React 18** with TypeScript for interactive components
-- **Tailwind CSS** for styling
-- **Framer Motion** for animations
-- **React Hook Form** for forms
-- **Web3Forms** for form submissions
-- **TMDB API** for movie posters and person images
-- **Cloudflare Pages** for deployment
+## 🛠️ Tech Stack
 
-## Getting Started
+| Layer | Technology |
+|---|---|
+| Framework | [Astro 5](https://astro.build/) with server-side rendering |
+| UI | [React 18](https://react.dev/) + TypeScript |
+| Styling | [Tailwind CSS](https://tailwindcss.com/) |
+| Animation | [Framer Motion](https://www.framer.com/motion/) |
+| Images | [TMDB API](https://www.themoviedb.org/documentation/api) |
+| Forms | [React Hook Form](https://react-hook-form.com/) + [Web3Forms](https://web3forms.com/) |
+| Deployment | [Cloudflare Pages](https://pages.cloudflare.com/) |
 
-### Prerequisites
-
-- Node.js 18+
-- npm or yarn
-
-### Installation
-
-```bash
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-```
-
-The dev server will start at `http://localhost:4321/`
-
-### Environment Variables
-
-Create a `.env.local` file with:
-
-```env
-# Server-side only (never exposed to client)
-GUEST_PASSWORD_HASH=your_sha256_hash_here
-PUBLIC_PASSWORD_HASH=your_sha256_hash_here
-
-# Public variables (accessible on client-side)
-PUBLIC_WEB3FORMS_ACCESS_KEY=your_key_here
-
-# TMDB API token (server-side only)
-TMDB_API_READ_TOKEN=your_tmdb_read_access_token_here
-```
-
-> **Important**: In Astro, environment variables without the `PUBLIC_` prefix are server-side only and never exposed to the client bundle. This keeps your password hashes secure.
-
-#### Generating Password Hashes
-
-To generate SHA-256 hashes for your passwords, use the terminal:
-
-```bash
-# macOS/Linux
-echo -n "your_password" | shasum -a 256
-
-# Example output:
-# d610dd4971f71ed75688f7014046f69b7f3bdcec898ca3eb7d4d821dff9b789f
-```
-
-Or use this JavaScript snippet in a browser console:
-
-```javascript
-async function hashPassword(password) {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password);
-  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-}
-
-// Example:
-hashPassword('oscar2026').then(console.log);
-```
-
-## Deployment to Cloudflare Pages
-
-### Setup Steps
-
-1. **Push to GitHub** - Commit and push your changes to GitHub
-
-2. **Connect Repository**
-   - Go to [Cloudflare Pages Dashboard](https://dash.cloudflare.com/)
-   - Click "Create a project" → "Connect to Git"
-   - Select your repository
-
-3. **Configure Build Settings**
-   - Framework preset: `Astro`
-   - Build command: `npm run build`
-   - Build output directory: `dist`
-   - Node version: `22` (or latest LTS)
-
-4. **Add Environment Variables**
-   - In Cloudflare Pages project settings → Environment variables
-   - Add the following variables for **Production** and **Preview** environments:
-
-   ```
-   GUEST_PASSWORD_HASH=<your_sha256_hash>
-   PUBLIC_PASSWORD_HASH=<your_sha256_hash>
-   PUBLIC_WEB3FORMS_ACCESS_KEY=<your_web3forms_key>
-   TMDB_API_READ_TOKEN=<your_tmdb_read_access_token>
-   ```
-
-5. **Deploy** - Cloudflare will automatically build and deploy your site
-
-### Security Notes
-
-✅ **What's Secure:**
-- Password hashes are only stored on the server (no `PUBLIC_` prefix)
-- Client-side code never sees password hashes
-- Authentication happens via server-side API endpoint (`/api/auth/login`)
-- `.env.local` is gitignored and never committed
-
-⚠️ **Before Going Public:**
-- Use strong, unique passwords
-- Generate new password hashes
-- Never commit `.env` or `.env.local` files to Git
-- Keep your Web3Forms and TMDB API keys private
-
-## Project Structure
+## 🏗️ Architecture Overview
 
 ```
 src/
 ├── components/
-│   ├── auth/          # Password gate
+│   ├── auth/          # Password gate (archived — site is now open)
 │   ├── layout/        # Header, Footer
-│   ├── nominations/   # Category list, cards, carousel
-│   ├── party/         # Invite details, RSVP form
-│   └── voting/        # Voting slides and forms
-├── context/           # Auth and voting state
-├── data/              # Nominations data
-├── layouts/           # Astro layouts
-├── pages/             # Astro pages and API routes
-│   └── api/
-│       └── auth/      # Server-side authentication
-├── services/          # API integrations
-└── env.d.ts           # TypeScript environment types
+│   ├── nominations/   # Category list, nominee cards, featured carousel
+│   ├── party/         # Invite details, RSVP form (archived — party is over)
+│   └── voting/        # Voting slides and forms (voting closed)
+├── context/           # Auth and voting React context
+├── data/
+│   ├── nominations.ts # All 24 categories and nominees
+│   ├── predictions.ts # Party participant predictions
+│   ├── results.ts     # Official winners + scoring logic
+│   └── trivia.ts      # Oscar trivia questions
+├── layouts/           # Base Astro page layout
+├── pages/             # Astro routes + API endpoints
+│   └── api/auth/      # Server-side auth endpoint (preserved for reference)
+└── services/
+    └── tmdb.ts        # TMDB API service (fetch posters, actor images, links)
 ```
 
-## Development Commands
+### Key Design Decisions
+
+- **Astro + React islands** — Static-first with selective hydration (`client:only="react"`) for interactive components. Keeps the bundle lean while allowing rich interactivity where needed.
+- **Weighted scoring in data layer** — `results.ts` exports the scoring logic alongside the data, making it easy to adjust point values without touching UI code.
+- **TMDB as the image source** — All movie and person images are fetched dynamically from TMDB at runtime, avoiding the need to store image assets.
+- **No build-time DB** — All participant predictions are stored as a TypeScript data file (`predictions.ts`), making the data self-contained, version-controlled, and easy to read.
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+
+- npm
+
+### Installation
 
 ```bash
-# Start dev server
+npm install
 npm run dev
-
-# Build for production
-npm run build
-
-# Preview production build locally
-npm run preview
-
-# Run Astro CLI
-npm run astro
 ```
 
-## Password Access Levels
+Dev server starts at `http://localhost:4321/`
 
-The application has two access levels:
+### Environment Variables
 
-1. **Guest** - Full access including party details and RSVP
-2. **Public** - Access to nominations and voting only
+Create a `.env.local` file:
 
-Configure which password grants which level by setting the appropriate hash in your environment variables.
+```env
+# TMDB API token (server-side only)
+TMDB_API_READ_TOKEN=your_tmdb_read_access_token_here
 
-## License
+# Optional: Web3Forms key for RSVP form
+PUBLIC_WEB3FORMS_ACCESS_KEY=your_key_here
 
-Private project - All rights reserved.
+# Optional: Password hashes (preserved for auth reference)
+GUEST_PASSWORD_HASH=your_sha256_hash_here
+PUBLIC_PASSWORD_HASH=your_sha256_hash_here
+```
+
+> In Astro, environment variables without the `PUBLIC_` prefix are server-side only and never exposed to the client bundle.
+
+## ☁️ Deployment (Cloudflare Pages)
+
+1. **Push to GitHub**
+2. **Connect to Cloudflare Pages** → Create Project → Connect to Git → Select repo
+3. **Build settings:**
+   - Framework preset: `Astro`
+   - Build command: `npm run build`
+   - Output directory: `dist`
+   - Node version: `22`
+4. **Add environment variables** in Cloudflare Pages project settings for Production and Preview
+
+## 🧪 Development Commands
+
+```bash
+npm run dev       # Start dev server
+npm run build     # Build for production
+npm run preview   # Preview production build locally
+npm run astro     # Astro CLI
+```
+
+## 📝 License
+
+Private project — All rights reserved.

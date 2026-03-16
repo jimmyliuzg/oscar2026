@@ -39,7 +39,7 @@ export const participants: Participant[] = [
         },
     },
     {
-        name: "Kevin Zhang",
+        name: "Kevin",
         predictions: {
             "Best Picture": "One Battle after Another - One Battle after Another",
             "Directing": "Paul Thomas Anderson - One Battle after Another",
@@ -81,11 +81,7 @@ export const participants: Participant[] = [
         },
     },
     {
-        name: "Justin Vuong",
-        predictions: {},
-    },
-    {
-        name: "Jimmy Liu",
+        name: "Jimmy",
         predictions: {
             "Best Picture": "Sinners - Sinners",
             "Directing": "Paul Thomas Anderson - One Battle after Another",
@@ -114,7 +110,7 @@ export const participants: Participant[] = [
         },
     },
     {
-        name: "Benson Tsai",
+        name: "Benson",
         predictions: {
             "Best Picture": "One Battle after Another - One Battle after Another",
             "Directing": "Paul Thomas Anderson - One Battle after Another",
@@ -205,7 +201,7 @@ export const participants: Participant[] = [
         },
     },
     {
-        name: "Daniel Cheng",
+        name: "Daniel",
         predictions: {
             "Best Picture": "Train Dreams - Train Dreams",
             "Directing": "Chloé Zhao - Hamnet",

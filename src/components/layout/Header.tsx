@@ -1,9 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useAuth } from '../../context/AuthContext';
 
 export default function Header() {
-    const { accessLevel, logout } = useAuth();
     const [currentPath, setCurrentPath] = useState('');
 
     useEffect(() => {
@@ -11,17 +9,11 @@ export default function Header() {
     }, []);
 
     const navItems = [
-        { path: '/', label: 'Home', guestOnly: false },
-        { path: '/nominations', label: 'Nominations', guestOnly: false },
-        { path: '/vote', label: 'Vote', guestOnly: false },
-        { path: '/results', label: 'Results', guestOnly: false },
-        { path: '/trivia', label: 'Trivia', guestOnly: false },
+        { path: '/', label: 'Home' },
+        { path: '/nominations', label: 'Nominations' },
+        { path: '/results', label: 'Results' },
+        { path: '/trivia', label: 'Trivia' },
     ];
-
-    const filteredNavItems = navItems.filter(item => {
-        if (item.guestOnly && accessLevel !== 'guest') return false;
-        return true;
-    });
 
     return (
         <motion.header
@@ -42,8 +34,7 @@ export default function Header() {
 
                     {/* Navigation */}
                     <nav className="flex items-center gap-1 sm:gap-2">
-                        {filteredNavItems.map((item) => {
-                            // Simple check for active state
+                        {navItems.map((item) => {
                             const isActive = currentPath === item.path || (item.path !== '/' && currentPath.startsWith(item.path));
                             return (
                                 <a
@@ -66,19 +57,6 @@ export default function Header() {
                             );
                         })}
                     </nav>
-
-                    {/* User actions */}
-                    <div className="flex items-center gap-3">
-                        <span className="text-xs text-text-muted hidden sm:block">
-                            {accessLevel === 'guest' ? '🎟️ Guest' : '👤 Public'}
-                        </span>
-                        <button
-                            onClick={logout}
-                            className="text-sm text-text-light hover:text-secondary transition-colors"
-                        >
-                            Logout
-                        </button>
-                    </div>
                 </div>
             </div>
         </motion.header>

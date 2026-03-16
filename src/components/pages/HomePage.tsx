@@ -1,21 +1,70 @@
-import { motion } from 'framer-motion';
-import { useAuth } from '../../context/AuthContext';
-import InviteDetails from '../party/InviteDetails';
-import RSVPForm from '../party/RSVPForm';
-import FeaturedCarousel from '../FeaturedCarousel';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import WinnerSpotlight from '../WinnerSpotlight';
 
 export default function HomePage() {
-    const { accessLevel } = useAuth();
-    const isGuest = accessLevel === 'guest';
+    const [showThankYou, setShowThankYou] = useState(false);
 
-    // Calculate countdown to March 15, 2026
-    const eventDate = new Date('2026-03-15T18:00:00-08:00');
-    const now = new Date();
-    const diffTime = eventDate.getTime() - now.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    useEffect(() => {
+        // Show thank-you popup once per session
+        const dismissed = sessionStorage.getItem('thankyou_dismissed');
+        if (!dismissed) {
+            setShowThankYou(true);
+        }
+    }, []);
+
+    const dismissThankYou = () => {
+        sessionStorage.setItem('thankyou_dismissed', '1');
+        setShowThankYou(false);
+    };
 
     return (
         <div className="page-transition">
+
+            {/* Thank-You Modal */}
+            <AnimatePresence>
+                {showThankYou && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+                        onClick={dismissThankYou}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.85, opacity: 0, y: 20 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            exit={{ scale: 0.9, opacity: 0, y: 10 }}
+                            transition={{ duration: 0.4, ease: 'easeOut' }}
+                            className="bg-background-elevated border border-accent-light rounded-2xl p-8 max-w-md w-full shadow-2xl text-center"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <div className="w-20 h-20 bg-gradient-to-br from-primary to-primary-dark rounded-full flex items-center justify-center mx-auto mb-5 shadow-golden animate-golden-glow">
+                                <span className="text-4xl">🏆</span>
+                            </div>
+                            <h2 className="font-heading text-3xl text-text mb-3">
+                                Thank You!
+                            </h2>
+                            <p className="text-text-light text-lg font-accent italic mb-2">
+                                We loved hosting and are so thankful for all of you for coming.
+                            </p>
+                            <p className="text-text-muted text-sm mb-7">
+                                Hope everyone had a great time celebrating cinema together. Here's to more great movies! 🎬✨
+                            </p>
+                            <button
+                                onClick={dismissThankYou}
+                                className="btn-primary w-full"
+                            >
+                                View the Results 🏆
+                            </button>
+                            <p className="text-text-muted text-xs mt-4 cursor-pointer hover:text-text transition-colors" onClick={dismissThankYou}>
+                                Close
+                            </p>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
             {/* Hero Section */}
             <section className="relative overflow-hidden py-12 sm:py-16">
                 {/* Background decoration */}
@@ -33,7 +82,7 @@ export default function HomePage() {
                     >
                         <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-6">
                             <span className="text-lg">🎬</span>
-                            {diffDays > 0 ? `${diffDays} days until Oscar night!` : 'Oscar night is here!'}
+                            98th Academy Awards — March 2026
                         </div>
 
                         <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl text-text mb-6">
@@ -43,14 +92,12 @@ export default function HomePage() {
                         </h1>
 
                         <p className="text-lg sm:text-xl text-text-light mb-8 font-accent italic">
-                            {isGuest
-                                ? "You're invited to an evening of glamour, predictions, and cinema celebration."
-                                : "Browse the nominations and submit your predictions for Oscar night."}
+                            Browse all 24 categories, explore the nominees, and see how the night unfolded.
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <a href="/vote" className="btn-primary">
-                                Make Your Predictions 🏆
+                            <a href="/results" className="btn-primary">
+                                See the Results 🏆
                             </a>
                             <a href="/nominations" className="btn-outline">
                                 View Nominations
@@ -58,18 +105,17 @@ export default function HomePage() {
                         </div>
                     </motion.div>
 
-                    {/* Countdown cards */}
+                    {/* Stats cards */}
                     <motion.div
                         initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: 0.2 }}
-                        className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto"
+                        className="grid grid-cols-2 sm:grid-cols-3 gap-4 max-w-xl mx-auto"
                     >
                         {[
-                            { label: 'Best Picture', value: '10', icon: '🎬' },
-                            { label: 'Categories', value: '24', icon: '🏆' },
-                            { label: 'Nominees', value: '100+', icon: '⭐' },
-                            { label: 'Party Date', value: 'Mar 15', icon: '📅' },
+                            { label: 'Best Picture Nominees', value: '10', icon: '🎬' },
+                            { label: 'Total Categories', value: '24', icon: '🏆' },
+                            { label: 'Total Nominees', value: '100+', icon: '⭐' },
                         ].map((stat, index) => (
                             <motion.div
                                 key={stat.label}
@@ -87,70 +133,19 @@ export default function HomePage() {
                 </div>
             </section>
 
-            {/* Guest-only Party Details Section */}
-            {isGuest && (
-                <section className="section">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: 0.4 }}
-                        className="grid lg:grid-cols-2 gap-8"
-                    >
-                        <InviteDetails />
-                        <RSVPForm />
-                    </motion.div>
-                </section>
-            )}
-
-            {/* Public: Teaser Section */}
-            {!isGuest && (
-                <section className="section">
-                    <motion.div
-                        initial={{ opacity: 0, y: 30 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: 0.4 }}
-                        className="bg-background-elevated rounded-xl p-8 border border-accent-light text-center max-w-2xl mx-auto"
-                    >
-                        <span className="text-4xl block mb-4">🎥</span>
-                        <h2 className="font-heading text-2xl text-text mb-4">
-                            2026 Academy Awards
-                        </h2>
-                        <p className="text-text-light mb-6">
-                            The 98th Academy Awards ceremony will honor the best films of 2025.
-                            Browse all 24 categories and submit your predictions before Oscar night!
-                        </p>
-                        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <a href="/nominations" className="btn-secondary">
-                                Browse Nominations
-                            </a>
-                            <a href="/vote" className="btn-primary">
-                                Submit Predictions
-                            </a>
-                        </div>
-                    </motion.div>
-                </section>
-            )}
-
-            {/* Featured Films Section */}
+            {/* Winner Spotlight */}
             <section className="section pt-0">
                 <motion.div
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.5 }}
+                    transition={{ duration: 0.6, delay: 0.4 }}
                 >
-                    <h2 className="font-heading text-2xl text-center text-text mb-8">
-                        Featured Nominees
+                    <h2 className="font-heading text-2xl text-center text-text mb-2">
+                        🏆 2026 Oscar Winners
                     </h2>
+                    <p className="text-center text-sm text-text-muted mb-6">Click a card to view on TMDB</p>
 
-                    <FeaturedCarousel
-                        films={[
-                            { title: 'Sinners', nominations: 16, year: 2025 },
-                            { title: 'One Battle after Another', nominations: 12, year: 2025 },
-                            { title: 'Hamnet', nominations: 10, year: 2025 },
-                            { title: 'Marty Supreme', nominations: 9, year: 2025 },
-                            { title: 'Frankenstein', nominations: 8, year: 2025 },
-                        ]}
-                    />
+                    <WinnerSpotlight />
                 </motion.div>
             </section>
         </div>

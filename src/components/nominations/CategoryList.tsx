@@ -1,11 +1,24 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Category } from '../../data/nominations';
+import { officialResults, isCorrect } from '../../data/results';
 import NomineeCard from './NomineeCard';
 
 interface CategoryListProps {
     categories: Category[];
     onNomineeHover?: (film: string) => void;
+}
+
+/** Check if a nominee matches the official winner for a given category name */
+function checkIsWinner(nominee: { name: string; film: string }, categoryName: string): boolean {
+    const official = officialResults[categoryName];
+    if (!official) return false;
+    // Build prediction-style string "Name - Film" to use existing isCorrect logic
+    const predictionStyle = `${nominee.name} - ${nominee.film}`;
+    if (isCorrect(predictionStyle, official)) return true;
+    // Also check just the film (for film-only entries like Best Picture)
+    const filmOnly = `${nominee.film} - ${nominee.film}`;
+    return isCorrect(filmOnly, official);
 }
 
 export default function CategoryList({ categories, onNomineeHover }: CategoryListProps) {
@@ -17,6 +30,7 @@ export default function CategoryList({ categories, onNomineeHover }: CategoryLis
         <div className="space-y-4">
             {categories.map((category) => {
                 const isExpanded = expandedCategory === category.id;
+                const hasResult = !!officialResults[category.name];
 
                 return (
                     <div
@@ -30,9 +44,16 @@ export default function CategoryList({ categories, onNomineeHover }: CategoryLis
                         >
                             <div className="text-left">
                                 <h3 className="font-heading text-xl sm:text-2xl text-text mb-1">{category.name}</h3>
-                                <p className="text-sm text-text-muted">
-                                    {category.nominees.length} nominees
-                                </p>
+                                <div className="flex items-center gap-2 flex-wrap">
+                                    <p className="text-sm text-text-muted">
+                                        {category.nominees.length} nominees
+                                    </p>
+                                    {hasResult && (
+                                        <span className="inline-flex items-center gap-1 bg-primary/15 text-primary text-xs font-semibold px-2 py-0.5 rounded-full">
+                                            🏆 Winner announced
+                                        </span>
+                                    )}
+                                </div>
                             </div>
                             <motion.span
                                 animate={{ rotate: isExpanded ? 180 : 0 }}
@@ -62,6 +83,7 @@ export default function CategoryList({ categories, onNomineeHover }: CategoryLis
                                                     categoryId={category.id}
                                                     onHover={() => onNomineeHover?.(nominee.film)}
                                                     showPoster={category.isAboveTheLine}
+                                                    isWinner={checkIsWinner(nominee, category.name)}
                                                 />
                                             ))}
                                         </div>
@@ -75,3 +97,4 @@ export default function CategoryList({ categories, onNomineeHover }: CategoryLis
         </div>
     );
 }
+

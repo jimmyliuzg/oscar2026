@@ -1,8 +1,20 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { ConnectedVoting } from "../components/PageWrappers";
 ---
 
-<Layout title="Vote | 2026 Oscar Party">
-    <ConnectedVoting client:only="react" />
+<Layout title="Voting Closed | 2026 Oscar Party">
+    <div class="min-h-[calc(100vh-200px)] flex items-center justify-center p-8">
+        <div class="text-center max-w-md">
+            <div class="text-6xl mb-6">🗳️</div>
+            <h1 class="font-heading text-3xl text-text mb-4">Voting is Closed</h1>
+            <p class="text-text-light mb-8">
+                The 2026 Oscars have been announced! Voting is now closed — check out the final results to see how everyone did.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="/results" class="btn-primary">See the Results 🏆</a>
+                <a href="/" class="btn-outline">Back to Home</a>
+            </div>
+        </div>
+    </div>
 </Layout>
+
