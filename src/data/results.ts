@@ -11,10 +11,10 @@
  * Leave a category's value as empty string ("") if not yet announced.
  */
 export const officialResults: Record<string, string> = {
-    "Best Picture": "",
+    "Best Picture": "One Battle after Another - One Battle after Another",
     "Directing": "Paul Thomas Anderson - One Battle after Another",
     "Actor in a Leading Role": "Michael B. Jordan - Sinners",
-    "Actress in a Leading Role": "",
+    "Actress in a Leading Role": "Jessie Buckley - Hamnet",
     "Actor in a Supporting Role": "Sean Penn - One Battle after Another",
     "Actress in a Supporting Role": "Amy Madigan - Weapons",
     "Writing (Original Screenplay)": "Ryan Coogler - Sinners",
