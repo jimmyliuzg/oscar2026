@@ -8,6 +8,8 @@ import {
     ALL_CATEGORIES,
     isCorrect,
     scoreParticipant,
+    POINTS_ABOVE_THE_LINE,
+    POINTS_BELOW_THE_LINE,
 } from '../../data/results';
 
 type ViewMode = 'leaderboard' | 'category';
@@ -48,9 +50,9 @@ function getMedalColor(rank: number): string {
     return 'text-text-muted';
 }
 
-function getScoreBadgeClass(correct: number, total: number): string {
-    if (total === 0) return 'bg-accent-light text-text-muted';
-    const pct = correct / total;
+function getScoreBadgeClass(pts: number, maxPts: number): string {
+    if (maxPts === 0) return 'bg-accent-light text-text-muted';
+    const pct = pts / maxPts;
     if (pct >= 0.75) return 'bg-green-100 text-green-700';
     if (pct >= 0.5) return 'bg-yellow-100 text-yellow-700';
     if (pct > 0) return 'bg-orange-100 text-orange-700';
@@ -232,19 +234,27 @@ export default function ResultsPage() {
 
                             {/* Full Table */}
                             <div className="bg-background-elevated rounded-xl border border-accent-light shadow-md overflow-hidden">
+                                {/* Scoring legend */}
+                                <div className="flex items-center gap-4 px-4 sm:px-6 py-2.5 bg-primary-light/20 border-b border-accent-light text-xs text-text-muted">
+                                    <span>Scoring:</span>
+                                    <span className="font-semibold text-primary">⭐ Major categories = {POINTS_ABOVE_THE_LINE} pts each</span>
+                                    <span className="font-semibold text-text-light">🎬 Technical categories = {POINTS_BELOW_THE_LINE} pt each</span>
+                                </div>
                                 {/* Table header */}
                                 <div className="grid grid-cols-[2rem_1fr_repeat(3,_auto)] sm:grid-cols-[2.5rem_1fr_repeat(3,_auto)] gap-x-4 px-4 sm:px-6 py-3 bg-accent-light/30 border-b border-accent-light text-xs font-semibold text-text-muted uppercase tracking-wider">
                                     <div>#</div>
                                     <div>Participant</div>
-                                    <div className="text-right hidden sm:block">Above</div>
-                                    <div className="text-right hidden sm:block">Below</div>
+                                    <div className="text-right hidden sm:block">Above ✓</div>
+                                    <div className="text-right hidden sm:block">Below ✓</div>
                                     <div className="text-right">Score</div>
                                 </div>
 
                                 {rankedParticipants.map((participant, idx) => {
                                     const { score, rank } = participant;
-                                    const possible = score.possible;
+                                    const possiblePoints = score.possiblePoints;
                                     const isTop = rank === 1 && score.total > 0;
+                                    const announcedAboveMax = score.announcedAbove * POINTS_ABOVE_THE_LINE;
+                                    const announcedBelowMax = score.announcedBelow * POINTS_BELOW_THE_LINE;
                                     return (
                                         <motion.div
                                             key={participant.name}
@@ -264,40 +274,40 @@ export default function ResultsPage() {
                                                     {participant.name}
                                                     {isTop && <span className="ml-1.5 text-xs text-primary">👑</span>}
                                                 </p>
-                                                {possible > 0 && (
+                                                {possiblePoints > 0 && (
                                                     <div className="mt-1 flex items-center gap-1.5">
                                                         <div className="flex-1 h-1 bg-accent-light rounded-full max-w-[80px] sm:max-w-[120px]">
                                                             <div
                                                                 className="h-1 bg-gradient-to-r from-primary to-primary-dark rounded-full transition-all duration-500"
-                                                                style={{ width: `${(score.total / possible) * 100}%` }}
+                                                                style={{ width: `${(score.total / possiblePoints) * 100}%` }}
                                                             />
                                                         </div>
-                                                        <span className="text-xs text-text-muted">{possible > 0 ? `${Math.round((score.total / possible) * 100)}%` : '-'}</span>
+                                                        <span className="text-xs text-text-muted">{possiblePoints > 0 ? `${Math.round((score.total / possiblePoints) * 100)}%` : '-'}</span>
                                                     </div>
                                                 )}
                                             </div>
 
-                                            {/* Above the line */}
+                                            {/* Above the line pts */}
                                             <div className="text-right hidden sm:block">
-                                                <span className={`inline-block text-xs font-medium px-2 py-0.5 rounded-full ${getScoreBadgeClass(score.aboveTheLine, ABOVE_THE_LINE_CATEGORIES.filter(c => officialResults[c]).length)}`}>
-                                                    {score.aboveTheLine}/{ABOVE_THE_LINE_CATEGORIES.filter(c => officialResults[c]).length}
+                                                <span className={`inline-block text-xs font-medium px-2 py-0.5 rounded-full ${getScoreBadgeClass(score.aboveTheLine, announcedAboveMax)}`}>
+                                                    {score.correctAbove}/{score.announcedAbove}
                                                 </span>
                                             </div>
 
-                                            {/* Below the line */}
+                                            {/* Below the line pts */}
                                             <div className="text-right hidden sm:block">
-                                                <span className={`inline-block text-xs font-medium px-2 py-0.5 rounded-full ${getScoreBadgeClass(score.belowTheLine, BELOW_THE_LINE_CATEGORIES.filter(c => officialResults[c]).length)}`}>
-                                                    {score.belowTheLine}/{BELOW_THE_LINE_CATEGORIES.filter(c => officialResults[c]).length}
+                                                <span className={`inline-block text-xs font-medium px-2 py-0.5 rounded-full ${getScoreBadgeClass(score.belowTheLine, announcedBelowMax)}`}>
+                                                    {score.correctBelow}/{score.announcedBelow}
                                                 </span>
                                             </div>
 
-                                            {/* Total */}
+                                            {/* Total weighted pts */}
                                             <div className="text-right">
                                                 <span className={`font-heading font-bold text-lg ${score.total > 0 ? 'text-primary' : 'text-text-muted'}`}>
                                                     {score.total}
                                                 </span>
-                                                {possible > 0 && (
-                                                    <span className="text-text-muted text-xs">/{possible}</span>
+                                                {possiblePoints > 0 && (
+                                                    <span className="text-text-muted text-xs">/{possiblePoints}pts</span>
                                                 )}
                                             </div>
                                         </motion.div>

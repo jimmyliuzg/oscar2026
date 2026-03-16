@@ -30,11 +30,11 @@ export const officialResults: Record<string, string> = {
     "Production Design": "",
     "Sound": "",
     "Visual Effects": "",
-    "Casting": "",
+    "Casting": "Cassandra Kulukundis - One Battle after Another",
     "Animated Short Film": "The Girl Who Cried Pearls - The Girl Who Cried Pearls",
     "Documentary Feature Film": "",
     "Documentary Short Film": "",
-    "Live Action Short Film": "",
+    "Live Action Short Film": "The Singers - The Singers | Two People Exchanging Saliva - Two People Exchanging Saliva",
 };
 
 /** The canonical ordered list of all categories */
@@ -57,39 +57,70 @@ export const BELOW_THE_LINE_CATEGORIES = ALL_CATEGORIES.filter(
     (c) => !ABOVE_THE_LINE_CATEGORIES.includes(c)
 );
 
+/** Point values */
+export const POINTS_ABOVE_THE_LINE = 5;
+export const POINTS_BELOW_THE_LINE = 1;
+
+/** Get point value for a category */
+export function getPointValue(category: string): number {
+    return ABOVE_THE_LINE_CATEGORIES.includes(category)
+        ? POINTS_ABOVE_THE_LINE
+        : POINTS_BELOW_THE_LINE;
+}
+
 /** Check if a prediction matches the official result */
 export function isCorrect(prediction: string | undefined, official: string): boolean {
     if (!prediction || !official) return false;
     // Normalize: lowercase, trim
-    return prediction.trim().toLowerCase() === official.trim().toLowerCase();
+    const predNormalized = prediction.trim().toLowerCase();
+    // Handle ties separated by |
+    const officials = official.split('|').map(s => s.trim().toLowerCase());
+    return officials.includes(predNormalized);
 }
 
-/** Score a participant's predictions */
+/** Score a participant's predictions (weighted: 5pts above-the-line, 1pt below-the-line) */
 export function scoreParticipant(predictions: Record<string, string>): {
     total: number;
     aboveTheLine: number;
     belowTheLine: number;
-    possible: number;
+    possiblePoints: number;
+    correctAbove: number;
+    correctBelow: number;
+    announcedAbove: number;
+    announcedBelow: number;
 } {
     let aboveTheLine = 0;
     let belowTheLine = 0;
-    let possible = 0;
+    let correctAbove = 0;
+    let correctBelow = 0;
+    let announcedAbove = 0;
+    let announcedBelow = 0;
 
     for (const [cat, official] of Object.entries(officialResults)) {
         if (!official) continue; // Not yet announced
-        possible++;
+        const pts = getPointValue(cat);
         const correct = isCorrect(predictions[cat], official);
         if (ABOVE_THE_LINE_CATEGORIES.includes(cat)) {
-            if (correct) aboveTheLine++;
+            announcedAbove++;
+            if (correct) { aboveTheLine += pts; correctAbove++; }
         } else {
-            if (correct) belowTheLine++;
+            announcedBelow++;
+            if (correct) { belowTheLine += pts; correctBelow++; }
         }
     }
+
+    const possiblePoints =
+        announcedAbove * POINTS_ABOVE_THE_LINE +
+        announcedBelow * POINTS_BELOW_THE_LINE;
 
     return {
         total: aboveTheLine + belowTheLine,
         aboveTheLine,
         belowTheLine,
-        possible,
+        possiblePoints,
+        correctAbove,
+        correctBelow,
+        announcedAbove,
+        announcedBelow,
     };
 }

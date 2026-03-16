@@ -3,6 +3,7 @@ import HomePage from './pages/HomePage';
 import NominationsPage from './pages/NominationsPage';
 import VotingPage from './pages/VotingPage';
 import ResultsPage from './pages/ResultsPage';
+import TriviaPage from './pages/TriviaPage';
 
 export const ConnectedHome = () => (
     <AppShell>
@@ -25,5 +26,11 @@ export const ConnectedVoting = () => (
 export const ConnectedResults = () => (
     <AppShell>
         <ResultsPage />
+    </AppShell>
+);
+
+export const ConnectedTrivia = () => (
+    <AppShell>
+        <TriviaPage />
     </AppShell>
 );

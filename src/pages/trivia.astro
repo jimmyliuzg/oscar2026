@@ -1,0 +1,8 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { ConnectedTrivia } from "../components/PageWrappers";
+---
+
+<Layout title="Trivia | 2026 Oscar Party">
+    <ConnectedTrivia client:only="react" />
+</Layout>
