@@ -59,6 +59,16 @@ function getScoreBadgeClass(pts: number, maxPts: number): string {
     return 'bg-accent-light text-text-muted';
 }
 
+/** Splits "Person - Film" into parts. If both are the same (film-only), returns just { name: film }. */
+function parseWinner(raw: string): { name: string; film?: string } {
+    const idx = raw.indexOf(' - ');
+    if (idx === -1) return { name: raw };
+    const name = raw.slice(0, idx).trim();
+    const film = raw.slice(idx + 3).trim();
+    if (name.toLowerCase() === film.toLowerCase()) return { name };
+    return { name, film };
+}
+
 export default function ResultsPage() {
     const [viewMode, setViewMode] = useState<ViewMode>('leaderboard');
     const [selectedCategory, setSelectedCategory] = useState<string>(ALL_CATEGORIES[0]);
@@ -524,15 +534,23 @@ export default function ResultsPage() {
                                             <div className="flex-1">
                                                 <h2 className="font-heading text-2xl text-text mb-1">{selectedCategory}</h2>
 
-                                                {currentCategoryWinner ? (
-                                                    <div className="mt-2">
-                                                        <p className="text-xs text-text-muted uppercase tracking-widest mb-1.5">🏅 Official Winner</p>
-                                                        <div className="inline-flex items-center gap-2 bg-secondary/10 text-secondary border border-secondary/20 px-4 py-2 rounded-lg font-semibold text-sm">
-                                                            <span>🏆</span>
-                                                            <span>{currentCategoryWinner}</span>
+                                                {currentCategoryWinner ? (() => {
+                                                    const { name, film } = parseWinner(currentCategoryWinner);
+                                                    return (
+                                                        <div className="mt-2">
+                                                            <p className="text-xs text-text-muted uppercase tracking-widest mb-1.5">🏅 Official Winner</p>
+                                                            <div className="inline-flex flex-col gap-0.5 bg-secondary/10 border border-secondary/20 px-4 py-2.5 rounded-lg">
+                                                                <div className="flex items-center gap-2 font-bold text-secondary text-base">
+                                                                    <span>🏆</span>
+                                                                    <span>{name}</span>
+                                                                </div>
+                                                                {film && (
+                                                                    <span className="text-xs text-text-muted italic pl-7">{film}</span>
+                                                                )}
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                ) : (
+                                                    );
+                                                })() : (
                                                     <div className="mt-2 inline-flex items-center gap-2 bg-accent-light/50 text-text-muted px-4 py-2 rounded-lg text-sm">
                                                         <span>⏳</span>
                                                         <span>Not yet announced</span>
@@ -577,16 +595,24 @@ export default function ResultsPage() {
 
                                                 {/* Prediction */}
                                                 <div className="flex-1 min-w-0">
-                                                    {p.prediction ? (
-                                                        <p className={`text-sm truncate ${currentCategoryWinner
-                                                            ? p.correct
-                                                                ? 'text-green-700 font-medium'
-                                                                : 'text-text-muted'
-                                                            : 'text-text'
-                                                            }`}>
-                                                            {p.prediction}
-                                                        </p>
-                                                    ) : (
+                                                    {p.prediction ? (() => {
+                                                        const { name, film } = parseWinner(p.prediction);
+                                                        return (
+                                                            <div>
+                                                                <p className={`text-sm truncate ${currentCategoryWinner
+                                                                    ? p.correct
+                                                                        ? 'text-green-700 font-medium'
+                                                                        : 'text-text-muted'
+                                                                    : 'text-text'
+                                                                    }`}>
+                                                                    {name}
+                                                                </p>
+                                                                {film && (
+                                                                    <p className="text-xs text-text-muted italic truncate">{film}</p>
+                                                                )}
+                                                            </div>
+                                                        );
+                                                    })() : (
                                                         <p className="text-sm text-text-muted italic">No prediction</p>
                                                     )}
                                                 </div>
