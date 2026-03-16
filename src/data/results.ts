@@ -32,8 +32,8 @@ export const officialResults: Record<string, string> = {
     "Visual Effects": "Avatar: Fire and Ash - Avatar: Fire and Ash",
     "Casting": "Cassandra Kulukundis - One Battle after Another",
     "Animated Short Film": "The Girl Who Cried Pearls - The Girl Who Cried Pearls",
-    "Documentary Feature Film": "",
-    "Documentary Short Film": "",
+    "Documentary Feature Film": "Mr. Nobody Against Putin - Mr. Nobody Against Putin",
+    "Documentary Short Film": "All the Empty Rooms - All the Empty Rooms",
     "Live Action Short Film": "The Singers - The Singers | Two People Exchanging Saliva - Two People Exchanging Saliva",
 };
 
